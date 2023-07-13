@@ -90,7 +90,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           />
         </label>
         <label className="grid gap-2">
-          Ingredients (one per line):
+          Ingredients (seperated by commas):
           <textarea
             name="ingredients"
             value={formState.ingredients}
@@ -122,7 +122,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           />
         </label>
         <label className="grid gap-2">
-          Tags (one per line):
+          Tags (seperated by commas):
           <textarea
             name="tags"
             value={formState.tags}
