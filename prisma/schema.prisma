@@ -1,0 +1,41 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+
+}
+
+model Recipe {
+  id        String     @default(cuid()) @id
+  title     String
+  content   String?
+  imageUrl  String?  @map(name: "image_url")
+  difficulty String?
+  duration  Int?
+  ingredients String[]
+  notes     String?
+  tags      String[]
+  whereFrom String?  @map(name: "where_from")
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  author    User?   @relation(fields: [authorId], references: [id])
+  authorId  String?
+  @@map(name: "recipes")
+
+}
+
+model User {
+  id            String       @default(cuid()) @id
+  name          String?
+  email         String?   @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  recipes         Recipe[]
+  @@map(name: "users")
+}
