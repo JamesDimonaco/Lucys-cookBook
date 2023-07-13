@@ -97,8 +97,8 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             onChange={handleArrayChange}
           />
         </label>
-        <label className="grid mb-5">
-          Ingridents:
+        <label className="grid mb-12">
+          Instructions:
           <ReactQuill
             theme="snow"
             value={formState.content}
