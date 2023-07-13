@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </form>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-10 text-gray-600 px-2">
+      <div className="max-w-3xl mx-auto px-4 py-10 text-gray-600">
         <h1 className="text-4xl font-semibold text-gray-900 mb-2">
           {recipe.title}
         </h1>

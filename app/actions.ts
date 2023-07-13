@@ -1,6 +1,18 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { Recipe } from "@prisma/client";
+
+interface RecipeType {
+  title: string;
+  content: string;
+  imageUrl: string | null;
+  difficulty: string;
+  duration: number | null;
+  ingredients: string[];
+  notes: string | null;
+  tags: string[];
+  whereFrom: string;
+  id?: string;
+}
 
 export const editRecipe = async (recipe: any) => {
   console.log(recipe, "recipe");
@@ -11,16 +23,16 @@ export const editRecipe = async (recipe: any) => {
   }
 
   // Prepare recipe data
-  const recipeData: Recipe = {
+  const recipeData: RecipeType = {
     title: data.title,
-    content: data.content || null,
+    content: data.content,
     imageUrl: data.imageUrl || null,
-    difficulty: data.difficulty || null,
+    difficulty: data.difficulty || "none",
     duration: parseInt(data.duration, 10) || null,
     ingredients: data.ingredients ? data.ingredients.split("\n") : [],
     notes: data.notes || null,
     tags: data.tags ? data.tags.split("\n") : [],
-    whereFrom: data.whereFrom || null,
+    whereFrom: data.whereFrom || "",
     id: data.id,
   };
 
@@ -43,19 +55,17 @@ export async function postRecipe(recipe: any) {
   }
 
   // Prepare recipe data
-  const recipeData: Recipe = {
+  const recipeData: RecipeType = {
     title: data.title,
-    content: data.content || null,
+    content: data.content || "",
     imageUrl: data.imageUrl || null,
-    difficulty: data.difficulty || null,
+    difficulty: data.difficulty || "none",
     duration: parseInt(data.duration, 10) || null,
     ingredients: data.ingredients ? data.ingredients.split("\n") : [],
     notes: data.notes || null,
     tags: data.tags ? data.tags.split("\n") : [],
-    whereFrom: data.whereFrom || null,
+    whereFrom: data.whereFrom || "",
   };
-
-  console.log(recipeData);
 
   const createdRecipe = await prisma.recipe.create({
     data: recipeData,
