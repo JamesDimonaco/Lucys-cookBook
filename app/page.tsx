@@ -21,8 +21,6 @@ export default async function Home() {
   };
 
   const recipes = await fetchData();
-  console.log(recipes);
-
   return (
     <main className="p-24 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
       {recipes &&

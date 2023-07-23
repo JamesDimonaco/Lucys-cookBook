@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 interface RecipeFormProps {
-  post: (recipe: any) => void;
+  post: (recipe: FullRecipeTypeFromPrisma) => void;
   defaultFromState?: any;
   defaultNumberOfIngredientsSections?: number;
 }
@@ -37,7 +37,7 @@ function RecipeForm({
   const handleArrayChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setFormState({
       ...formState,
-      [event.target.name]: event.target.value.split("\n"),
+      [event.target.name]: event.target.value.split(","),
     });
     console.log("handleArrayChange", formState);
   };
@@ -70,12 +70,9 @@ function RecipeForm({
     event.preventDefault();
     console.log(formState);
   };
+  console.log(formState, "formState");
 
   const ingredientsSection = (index: number) => {
-    console.log(index, "index");
-
-    console.log(formState, "formState");
-
     return (
       <label key={index} className="grid gap-2 text-text">
         Ingredients (separated by commas):

@@ -14,6 +14,23 @@ function EditRecipe({ recipe }: EditRecipeProps) {
   const [open, setOpen] = useState(false);
   console.log("formState ---", formState);
 
+  const handleEdit = async (recipe) => {
+    try {
+      // Perform the edit operation
+      const updatedRecipe = await editRecipe(recipe);
+
+      // If successful, update the state with the new data
+      setFormState(updatedRecipe);
+
+      // Close the form
+      setOpen(false);
+      window.location.reload();
+    } catch (err) {
+      console.error("Error while editing recipe", err);
+      // Optionally, handle error state here
+    }
+  };
+
   return (
     <div>
       {!open ? (
@@ -23,7 +40,7 @@ function EditRecipe({ recipe }: EditRecipeProps) {
           <Form
             defaultNumberOfIngredientsSections={numberOfIngredientsSections}
             defaultFromState={formState}
-            post={editRecipe}
+            post={handleEdit} // Replace editRecipe with handleEdit
           />
         </div>
       )}

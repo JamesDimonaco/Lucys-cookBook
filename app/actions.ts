@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { FullRecipeTypeFromPrisma } from "@/types/recipe";
 
 export interface IngredientSectionType {
   title: string;
@@ -19,12 +20,23 @@ export interface RecipeType {
   ingredientSections: IngredientSectionType[];
 }
 
-export const editRecipe = async (recipe: any) => {
+export const editRecipe = async (recipe: FullRecipeTypeFromPrisma) => {
   const data: Record<string, any> = {};
   for (let pair of recipe.entries()) {
     data[pair[0]] = pair[1];
   }
-  const ingredientSections = data.ingredientSections?.map(
+  // Prepare ingredient sections
+  let ingredientSections = [];
+  let i = 0;
+  while (data[`ingredientTitle${i}`] !== undefined) {
+    ingredientSections.push({
+      title: data[`ingredientTitle${i}`],
+      ingredients: data[`ingredients${i}`].split(","),
+    });
+    i++;
+  }
+
+  const ingredientSectionsData = ingredientSections.map(
     (section: IngredientSectionType) => ({
       title: section.title,
       ingredients: {
@@ -34,6 +46,7 @@ export const editRecipe = async (recipe: any) => {
       },
     })
   );
+
   const recipeData: RecipeType = {
     title: data.title,
     content: data.content,
@@ -41,16 +54,20 @@ export const editRecipe = async (recipe: any) => {
     difficulty: data.difficulty || "none",
     duration: parseInt(data.duration, 10) || null,
     notes: data.notes || null,
-    tags: data.tags ? data.tags.split("\n") : [],
+    tags: data.tags ? data.tags : [],
     whereFrom: data.whereFrom || "",
-    ingredientSections: ingredientSections || [],
+    ingredientSections: ingredientSectionsData,
     id: data.id,
   };
+
+  console.log(recipeData, "recipeData");
 
   // Delete existing ingredient sections
   const existingIngredientSections = await prisma.ingredientSection.findMany({
     where: { recipeId: data.id },
   });
+
+  console.log(existingIngredientSections, "existingIngredientSections");
 
   for (let section of existingIngredientSections) {
     await prisma.ingredient.deleteMany({
@@ -67,7 +84,14 @@ export const editRecipe = async (recipe: any) => {
     data: {
       ...recipeData,
       ingredientSections: {
-        create: ingredientSections,
+        create: ingredientSectionsData, // Here, use ingredientSectionsData instead of ingredientSections
+      },
+    },
+    include: {
+      ingredientSections: {
+        include: {
+          ingredients: true,
+        },
       },
     },
   });
@@ -75,7 +99,7 @@ export const editRecipe = async (recipe: any) => {
   return updatedRecipe;
 };
 
-export async function postRecipe(recipe: any) {
+export async function postRecipe(recipe: FullRecipeTypeFromPrisma) {
   const data: Record<string, any> = {};
   for (let pair of recipe.entries()) {
     data[pair[0]] = pair[1];
@@ -91,8 +115,6 @@ export async function postRecipe(recipe: any) {
     });
     i++;
   }
-
-  console.log(ingredientSections, "ingredientSections");
 
   const ingredientSectionsData = ingredientSections.map(
     (section: IngredientSectionType) => ({
