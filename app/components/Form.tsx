@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 interface RecipeFormProps {
-  post: (recipe: FullRecipeTypeFromPrisma) => void;
+  post: (recipe: any) => void;
   defaultFromState?: any;
   defaultNumberOfIngredientsSections?: number;
 }

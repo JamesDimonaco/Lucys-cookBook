@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { FullRecipeTypeFromPrisma } from "@/types/recipe";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export interface IngredientSectionType {
   title: string;
@@ -17,10 +18,10 @@ export interface RecipeType {
   tags: string[];
   whereFrom: string;
   id?: string;
-  ingredientSections: IngredientSectionType[];
+  ingredientSections: any[];
 }
 
-export const editRecipe = async (recipe: FullRecipeTypeFromPrisma) => {
+export const editRecipe = async (recipe: any) => {
   const data: Record<string, any> = {};
   for (let pair of recipe.entries()) {
     data[pair[0]] = pair[1];
@@ -84,7 +85,7 @@ export const editRecipe = async (recipe: FullRecipeTypeFromPrisma) => {
     data: {
       ...recipeData,
       ingredientSections: {
-        create: ingredientSectionsData, // Here, use ingredientSectionsData instead of ingredientSections
+        create: ingredientSectionsData,
       },
     },
     include: {
@@ -96,10 +97,12 @@ export const editRecipe = async (recipe: FullRecipeTypeFromPrisma) => {
     },
   });
 
+  revalidatePath(`/recipes/${updatedRecipe.id}`);
+
   return updatedRecipe;
 };
 
-export async function postRecipe(recipe: FullRecipeTypeFromPrisma) {
+export async function postRecipe(recipe: any) {
   const data: Record<string, any> = {};
   for (let pair of recipe.entries()) {
     data[pair[0]] = pair[1];
@@ -141,10 +144,9 @@ export async function postRecipe(recipe: FullRecipeTypeFromPrisma) {
       create: ingredientSectionsData,
     },
   };
-
   const createdRecipe = await prisma.recipe.create({
     data: recipeData,
   });
-
-  return createdRecipe;
+  revalidatePath(`/`);
+  redirect("/");
 }

@@ -12,19 +12,13 @@ function EditRecipe({ recipe }: EditRecipeProps) {
   const numberOfIngredientsSections = recipe.ingredientSections.length;
   const [formState, setFormState] = useState(recipe);
   const [open, setOpen] = useState(false);
-  console.log("formState ---", formState);
 
-  const handleEdit = async (recipe) => {
+  const handleEdit = async (recipe: any) => {
     try {
-      // Perform the edit operation
-      const updatedRecipe = await editRecipe(recipe);
-
-      // If successful, update the state with the new data
+      const updatedRecipe: any = await editRecipe(recipe);
       setFormState(updatedRecipe);
 
-      // Close the form
       setOpen(false);
-      window.location.reload();
     } catch (err) {
       console.error("Error while editing recipe", err);
       // Optionally, handle error state here
@@ -34,13 +28,24 @@ function EditRecipe({ recipe }: EditRecipeProps) {
   return (
     <div>
       {!open ? (
-        <button onClick={() => setOpen(!open)}>edit</button>
+        <button
+          className="mx-4 p-2 bg-primary text-text rounded-md mt-4"
+          onClick={() => setOpen(!open)}
+        >
+          edit
+        </button>
       ) : (
         <div className="w-screen h-screen">
+          <button
+            className="mx-4 p-2 bg-primary text-text rounded-md mt-4"
+            onClick={() => setOpen(!open)}
+          >
+            Close
+          </button>
           <Form
             defaultNumberOfIngredientsSections={numberOfIngredientsSections}
             defaultFromState={formState}
-            post={handleEdit} // Replace editRecipe with handleEdit
+            post={handleEdit}
           />
         </div>
       )}

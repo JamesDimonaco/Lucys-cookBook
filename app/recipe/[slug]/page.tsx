@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import EditRecipe from "@/app/components/editRecipe";
 import { FullRecipeTypeFromPrisma } from "../../types/receipe";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 export interface IngredientSectionType {
   title: string;
   ingredients: IngredientType[];
@@ -77,6 +78,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
         id: recipe.id,
       },
     });
+
+    revalidatePath(`/`);
+    redirect("/");
   };
 
   return (
