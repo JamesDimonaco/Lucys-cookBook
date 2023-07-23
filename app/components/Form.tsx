@@ -7,11 +7,16 @@ import "react-quill/dist/quill.snow.css";
 interface RecipeFormProps {
   post: (recipe: any) => void;
   defaultFromState?: any;
+  defaultNumberOfIngredientsSections?: number;
 }
 
-function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
+function RecipeForm({
+  post,
+  defaultFromState,
+  defaultNumberOfIngredientsSections = 1,
+}: RecipeFormProps) {
   const [numberOfIngredientsSections, setNumberOfIngredientsSections] =
-    useState(1);
+    useState(defaultNumberOfIngredientsSections);
   const [formState, setFormState] = useState(defaultFromState || {});
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,7 +47,8 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
     console.log(value, "value");
     console.log(formState);
 
-    let newIngredients = [...formState.ingredients];
+    let newIngredients = [...formState.ingredientSections];
+    console.log(newIngredients, "newIngredients");
 
     if (newIngredients[index] === undefined) {
       newIngredients[index] = { title: "", ingredients: [] };
@@ -56,7 +62,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
 
     setFormState({
       ...formState,
-      ingredients: newIngredients,
+      ingredientSections: newIngredients,
     });
   };
 
@@ -66,8 +72,12 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
   };
 
   const ingredientsSection = (index: number) => {
+    console.log(index, "index");
+
+    console.log(formState, "formState");
+
     return (
-      <label className="grid gap-2 text-text">
+      <label key={index} className="grid gap-2 text-text">
         Ingredients (separated by commas):
         <label>
           <h2>Title:</h2>
@@ -75,13 +85,25 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="text"
             name={`ingredientTitle${index}`}
+            value={
+              formState.ingredientSections[index]
+                ? formState.ingredientSections[index].title || ""
+                : ""
+            }
             onChange={(e) => handleIngredientChange(e, index, "title")}
           />
         </label>
         <textarea
           className="bg-primary text-secondary"
           name={`ingredients${index}`}
-          value={formState[`ingredients${index}`]}
+          value={
+            formState.ingredientSections[index]
+              ? formState.ingredientSections[index].ingredients.map(
+                  (i: string | { name: string }) =>
+                    typeof i === "string" ? i : i.name || ""
+                )
+              : ""
+          }
           onChange={(e) => handleIngredientChange(e, index, "ingredients")}
         />
       </label>
@@ -106,7 +128,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="text"
             name="title"
-            value={formState.title}
+            value={formState.title || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -117,7 +139,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="text"
             name="imageUrl"
-            value={formState.imageUrl}
+            value={formState.imageUrl || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -126,7 +148,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           <select
             className="bg-primary text-secondary"
             name="difficulty"
-            value={formState.difficulty}
+            value={formState.difficulty || ""}
             onChange={handleOptionChange}
           >
             <option value="Easy">Easy</option>
@@ -139,7 +161,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           <select
             className="bg-primary text-secondary"
             name="type"
-            value={formState.type}
+            value={formState.type || ""}
             onChange={handleOptionChange}
           >
             <option value="starter">Starter</option>
@@ -155,7 +177,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="number"
             name="duration"
-            value={formState.duration}
+            value={formState.duration || 0}
             onChange={handleInputChange}
           />
         </label>
@@ -165,7 +187,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="number"
             name="makes"
-            value={formState.makes}
+            value={formState.makes || 0}
             onChange={handleInputChange}
           />
         </label>
@@ -202,7 +224,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           Instructions:
           <ReactQuill
             theme="snow"
-            value={formState.content}
+            value={formState.content || ""}
             onChange={(value, delta, source, editor) => {
               console.log(value, "value");
 
@@ -216,7 +238,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
             className="bg-primary text-secondary"
             type="hidden"
             name="content"
-            value={formState.content}
+            value={formState.content || ""}
           />
         </label>
         <label className="grid gap-2 text-text">
@@ -224,7 +246,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           <textarea
             className="bg-primary text-secondary"
             name="notes"
-            value={formState.notes}
+            value={formState.notes || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -233,7 +255,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           <textarea
             className="bg-primary text-secondary"
             name="tags"
-            value={formState.tags}
+            value={formState.tags || ""}
             onChange={handleArrayChange}
           />
         </label>
@@ -242,7 +264,7 @@ function RecipeForm({ post, defaultFromState }: RecipeFormProps) {
           <input
             className="bg-primary text-secondary"
             type="text"
-            value={formState.whereFrom}
+            value={formState.whereFrom || ""}
             name="whereFrom"
             onChange={handleInputChange}
           />

@@ -1,13 +1,9 @@
 "use server";
 import prisma from "@/lib/prisma";
 
-export interface IngredientType {
-  name: string;
-}
-
 export interface IngredientSectionType {
   title: string;
-  ingredients: IngredientType[];
+  ingredients: string[];
 }
 
 export interface RecipeType {
@@ -32,8 +28,8 @@ export const editRecipe = async (recipe: any) => {
     (section: IngredientSectionType) => ({
       title: section.title,
       ingredients: {
-        create: section.ingredients.map((ingredient: IngredientType) => ({
-          name: ingredient.name,
+        create: section.ingredients.map((ingredient) => ({
+          name: ingredient,
         })),
       },
     })
@@ -96,12 +92,14 @@ export async function postRecipe(recipe: any) {
     i++;
   }
 
+  console.log(ingredientSections, "ingredientSections");
+
   const ingredientSectionsData = ingredientSections.map(
     (section: IngredientSectionType) => ({
       title: section.title,
       ingredients: {
-        create: section.ingredients.map((ingredient: IngredientType) => ({
-          name: ingredient.name,
+        create: section.ingredients.map((ingredient) => ({
+          name: ingredient,
         })),
       },
     })

@@ -1,22 +1,16 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import EditRecipe from "@/app/components/editRecipe";
-import {
-  IngredientType,
-  IngredientSectionType,
-  RecipeType,
-} from "../../actions";
+import { FullRecipeTypeFromPrisma } from "../../types/receipe";
+export interface IngredientSectionType {
+  title: string;
+  ingredients: IngredientType[];
+}
 
-type FullRecipeTypeFromPrisma = Prisma.RecipeGetPayload<{
-  include: {
-    author: true;
-    ingredientSections: {
-      include: {
-        ingredients: true;
-      };
-    };
-  };
-}>;
+type IngredientType = {
+  id: string;
+  name: string;
+};
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const fetchData = async () => {

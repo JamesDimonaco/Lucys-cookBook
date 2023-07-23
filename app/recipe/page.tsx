@@ -9,7 +9,7 @@ export default async function Recipes() {
     difficulty: "easy",
     type: "",
     duration: 0,
-    ingredients: [{ title: "", ingredients: [] }],
+    ingredientSections: [{ title: "", ingredients: [] }],
     notes: "",
     tags: [],
     makes: 0,

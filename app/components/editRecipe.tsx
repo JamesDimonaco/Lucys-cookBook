@@ -1,16 +1,18 @@
 "use client";
-import { Recipe } from "@prisma/client";
+import { FullRecipeTypeFromPrisma } from "../types/receipe";
 import React, { useState } from "react";
 import Form from "./Form";
 import { editRecipe } from "../actions";
 
 interface EditRecipeProps {
-  recipe: Recipe;
+  recipe: FullRecipeTypeFromPrisma;
 }
 
 function EditRecipe({ recipe }: EditRecipeProps) {
+  const numberOfIngredientsSections = recipe.ingredientSections.length;
   const [formState, setFormState] = useState(recipe);
   const [open, setOpen] = useState(false);
+  console.log("formState ---", formState);
 
   return (
     <div>
@@ -18,7 +20,11 @@ function EditRecipe({ recipe }: EditRecipeProps) {
         <button onClick={() => setOpen(!open)}>edit</button>
       ) : (
         <div className="w-screen h-screen">
-          <Form defaultFromState={formState} post={editRecipe} />
+          <Form
+            defaultNumberOfIngredientsSections={numberOfIngredientsSections}
+            defaultFromState={formState}
+            post={editRecipe}
+          />
         </div>
       )}
     </div>
