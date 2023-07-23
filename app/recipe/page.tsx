@@ -7,16 +7,18 @@ export default async function Recipes() {
     content: "",
     imageUrl: "",
     difficulty: "easy",
+    type: "",
     duration: 0,
-    ingredients: [],
+    ingredients: [{ title: "", ingredients: [] }],
     notes: "",
     tags: [],
+    makes: 0,
     whereFrom: "",
     authorId: "",
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between ">
+    <main className="">
       <Form defaultFromState={defaultFromState} post={postRecipe} />
     </main>
   );

@@ -10,8 +10,6 @@ interface EditRecipeProps {
 
 function EditRecipe({ recipe }: EditRecipeProps) {
   const [formState, setFormState] = useState(recipe);
-  console.log(formState, "sdfhsfds");
-
   const [open, setOpen] = useState(false);
 
   return (

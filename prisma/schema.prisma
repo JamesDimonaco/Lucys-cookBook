@@ -18,17 +18,34 @@ model Recipe {
   imageUrl  String?  @map(name: "image_url")
   difficulty String?
   duration  Int?
-  ingredients String[]
+  ingredientSections IngredientSection[]
   notes     String?
   tags      String[]
+  type      String?
+  makes     Int?
   whereFrom String?  @map(name: "where_from")
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
   @@map(name: "recipes")
-
 }
+
+model IngredientSection {
+  id     String      @default(cuid()) @id
+  title  String
+  recipe Recipe    @relation(fields: [recipeId], references: [id])
+  recipeId String
+  ingredients Ingredient[]
+}
+
+model Ingredient {
+  id                 String   @default(cuid()) @id
+  name               String
+  ingredientSection  IngredientSection @relation(fields: [ingredientSectionId], references: [id])
+  ingredientSectionId String
+}
+
 
 model User {
   id            String       @default(cuid()) @id
