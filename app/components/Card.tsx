@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
+  console.log(recipe);
+
   return (
     <Link className="bg-background" href={`/recipe/${recipe.id}`}>
       <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4 bg-primary hover:bg-accent">
@@ -27,12 +29,10 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
             <p className="mt-2 text-secondary">
               Duration: {recipe.duration} minutes
             </p>
-            <p className="mt-2 text-secondary">
+            {/* <p className="mt-2 text-secondary">
               Tags: {recipe.tags.join(", ")}
-            </p>
-            <p className="mt-2 text-secondary">
-              Author: {recipe.authorId || "unknown"}
-            </p>
+            </p> */}
+            <p className="mt-2 text-secondary">Type: {recipe.type || "N/A"}</p>
           </div>
         </div>
       </div>

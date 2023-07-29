@@ -14,7 +14,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="">
+    <header className="bg-secondary">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -34,7 +34,7 @@ export default function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-text hover:text-accent"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-black hover:text-accent"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
@@ -46,7 +46,7 @@ export default function Header() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-text hover:text-accent"
+              className="text-sm font-semibold leading-6 text-black hover:text-accent"
             >
               {item.name}
             </Link>
@@ -55,7 +55,7 @@ export default function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
             href="#"
-            className="text-sm font-semibold leading-6 text-text hover:text-accent"
+            className="text-sm font-semibold leading-6 text-black hover:text-accent"
           >
             Log in <span aria-hidden="true">&rarr;</span> Coming soon
           </Link>
@@ -82,7 +82,7 @@ export default function Header() {
             </Link>
             <button
               type="button"
-              className="-m-2.5 rounded-md p-2.5 text-text hover:text-accent"
+              className="-m-2.5 rounded-md p-2.5 text-black hover:text-accent"
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
@@ -97,7 +97,7 @@ export default function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                     key={item.name}
                     href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-text hover:text-accent hover:bg-gray-50"
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black hover:text-accent hover:bg-gray-50"
                   >
                     {item.name}
                   </Link>
@@ -106,7 +106,7 @@ export default function Header() {
               <div className="py-6">
                 <Link
                   href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-text hover:text-accent hover:bg-gray-50"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-black hover:text-accent hover:bg-gray-50"
                 >
                   Log in
                 </Link>

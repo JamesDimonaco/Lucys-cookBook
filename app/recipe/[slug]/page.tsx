@@ -85,7 +85,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="bg-background  min-h-screen pb-12  md:px-0">
-      <div className="flex justify-between p-6">
+      {/* <div className="flex justify-between p-6">
         <form action={deleteRecipe}>
           <button
             type="submit"
@@ -94,9 +94,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
             Delete
           </button>
         </form>
-      </div>
+      </div> */}
 
-      <div className="max-w-3xl mx-auto px-4 py-10 text-secondary bg-primary rounded-lg">
+      <div className="max-w-3xl mx-auto px-4 py-10 text-secondary bg-primary rounded-lg mt-4">
         <h1 className="text-4xl font-semibold text-text mb-2">
           {recipe.title}
         </h1>

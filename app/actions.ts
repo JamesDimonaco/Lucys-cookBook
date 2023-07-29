@@ -15,6 +15,7 @@ export interface RecipeType {
   difficulty: string;
   duration: number | null;
   notes: string | null;
+  type: string;
   tags: string[];
   whereFrom: string;
   id?: string;
@@ -56,6 +57,7 @@ export const editRecipe = async (recipe: any) => {
     duration: parseInt(data.duration, 10) || null,
     notes: data.notes || null,
     tags: data.tags ? data.tags : [],
+    type: data.type || "none",
     whereFrom: data.whereFrom || "",
     ingredientSections: ingredientSectionsData,
     id: data.id,
@@ -139,6 +141,7 @@ export async function postRecipe(recipe: any) {
     duration: parseInt(data.duration, 10) || null,
     notes: data.notes || null,
     tags: data.tags ? data.tags.split("\n") : [],
+    type: data.type || "none",
     whereFrom: data.whereFrom || "",
     ingredientSections: {
       create: ingredientSectionsData,
