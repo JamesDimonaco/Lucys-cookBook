@@ -3,6 +3,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import UploadButton from "./UploadButton";
 
 interface RecipeFormProps {
   post: (recipe: any) => void;
@@ -59,6 +60,15 @@ function RecipeForm({
     setFormState({
       ...formState,
       ingredientSections: newIngredients,
+    });
+  };
+
+  const handleImageUpload = (imageUrl: string) => {
+    console.log("Image URL: ", imageUrl);
+
+    setFormState({
+      ...formState,
+      imageUrl: imageUrl,
     });
   };
 
@@ -134,6 +144,9 @@ function RecipeForm({
             onChange={handleInputChange}
           />
         </label>
+
+        <UploadButton onSubmit={handleImageUpload} />
+
         <label className="grid gap-2 text-primary font-bold">
           Difficulty:
           <select
