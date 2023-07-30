@@ -56,14 +56,12 @@ export const editRecipe = async (recipe: any) => {
     difficulty: data.difficulty || "none",
     duration: parseInt(data.duration, 10) || null,
     notes: data.notes || null,
-    tags: data.tags ? data.tags : [],
+    tags: data.tags ? data.tags.split(",") : [],
     type: data.type || "none",
     whereFrom: data.whereFrom || "",
     ingredientSections: ingredientSectionsData,
     id: data.id,
   };
-
-  console.log(recipeData, "recipeData");
 
   // Delete existing ingredient sections
   const existingIngredientSections = await prisma.ingredientSection.findMany({
@@ -140,7 +138,7 @@ export async function postRecipe(recipe: any) {
     difficulty: data.difficulty || "none",
     duration: parseInt(data.duration, 10) || null,
     notes: data.notes || null,
-    tags: data.tags ? data.tags.split("\n") : [],
+    tags: data.tags ? data.tags.split(",") : [],
     type: data.type || "none",
     whereFrom: data.whereFrom || "",
     ingredientSections: {

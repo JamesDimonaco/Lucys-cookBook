@@ -262,8 +262,6 @@ function RecipeForm({
             name="tags"
             value={formState.tags || ""}
             onChange={handleArrayChange}
-            disabled
-            placeholder="Coming soon!"
           />
         </label>
         <label className="grid gap-2 text-primary font-bold">
