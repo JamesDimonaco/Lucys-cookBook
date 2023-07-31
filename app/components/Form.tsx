@@ -4,6 +4,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import UploadButton from "./UploadButton";
+import Image from "next/image";
 
 interface RecipeFormProps {
   post: (recipe: any) => void;
@@ -144,6 +145,18 @@ function RecipeForm({
             onChange={handleInputChange}
           />
         </label>
+
+        {formState.imageUrl && (
+          <div className="h-52 w-auto">
+            <Image
+              width={500}
+              height={300}
+              src={formState.imageUrl}
+              alt={formState.title}
+              className="mx-auto h-full  object-cover rounded-lg shadow-md"
+            />
+          </div>
+        )}
 
         <UploadButton onSubmit={handleImageUpload} />
 

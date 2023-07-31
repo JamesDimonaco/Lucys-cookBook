@@ -3,6 +3,7 @@ import EditRecipe from "@/app/components/editRecipe";
 import { FullRecipeTypeFromPrisma } from "../../types/receipe";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import Image from "next/image";
 export interface IngredientSectionType {
   title: string;
   ingredients: IngredientType[];
@@ -110,7 +111,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
         {recipe.imageUrl && (
           <div className="mb-8">
-            <img
+            <Image
+              width={500}
+              height={300}
               src={recipe.imageUrl}
               alt={recipe.title}
               className="w-full h-64 object-cover rounded-lg shadow-md"
@@ -137,7 +140,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </ul>
         <h2 className="text-2xl font-semibold text-text mb-2">Instructions</h2>
         <div
-          className="prose prose-lg text-secondary"
+          className="prose  text-secondary "
           dangerouslySetInnerHTML={{
             __html: recipe.content ? recipe.content : "",
           }}
