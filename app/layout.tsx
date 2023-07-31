@@ -17,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-background`}>
-        <Header />
+        <header className="bg-secondary sticky top-0 z-50">
+          <Header />
+        </header>
         {children}
       </body>
     </html>
