@@ -185,7 +185,7 @@ function RecipeForm({
             <option value="salad">Salad</option>
             <option value="dinner">Dinner</option>
             <option value="lightMeal">Light Meal</option>
-            <option value="desert">Desert</option>
+            <option value="dessert">Dessert</option>
             <option value="nibbles">Nibbles</option>
           </select>
         </label>

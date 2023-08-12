@@ -1,8 +1,8 @@
-import Image from "next/image";
 import prisma from "@/lib/prisma";
-import { useState, useEffect } from "react";
-import Table from "./components/table";
+
 import RecipeCard from "./components/Card";
+import { RecipeType } from "./types/recipe";
+import Display from "./components/DisplayRecipesCards";
 
 async function getFeedData() {
   const feed = await prisma.recipe.findMany({
@@ -20,11 +20,13 @@ export default async function Home() {
     return data;
   };
 
-  const recipes = await fetchData();
+  const recipes: any[] = await fetchData();
   return (
-    <main className="p-24 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
-      {recipes &&
-        recipes.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
+    <main>
+      {/* {recipes &&
+        recipes.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)} */}
+
+      <Display recipesFromServer={recipes} />
     </main>
   );
 }
