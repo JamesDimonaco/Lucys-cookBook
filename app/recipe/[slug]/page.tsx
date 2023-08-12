@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import EditRecipe from "@/app/components/EditRecipe1";
+import EditRecipe from "@/app/components/EditRecipe";
 import { FullRecipeTypeFromPrisma } from "../../types/recipe";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
