@@ -108,7 +108,7 @@ export default function Header() {
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 bg-background text-black hover:text-accent hover:bg-gray-50"
                 >
-                  Log in
+                  Log in <span aria-hidden="true">&rarr;</span> Coming soon
                 </Link>
               </div>
             </div>

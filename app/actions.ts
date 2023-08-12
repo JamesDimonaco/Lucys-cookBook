@@ -124,5 +124,7 @@ export async function postRecipe(recipe: any) {
 
   const createdRecipe = await prisma.recipe.create({ data: recipeData });
   revalidatePath(`/`);
-  redirect("/");
+  revalidatePath(`/recipe/${createdRecipe.id}`);
+
+  redirect(`/recipe/${createdRecipe.id}`);
 }
