@@ -4,6 +4,7 @@ import RecipeCard from "./Card";
 import { useEffect, useState, useCallback } from "react";
 import { debounce } from "lodash";
 import { RecipeType } from "../types/recipe";
+import Randomiser from "./Randomiser";
 
 interface IProps {
   recipesFromServer: RecipeType[];
@@ -38,13 +39,16 @@ export default function Display({ recipesFromServer }: IProps) {
 
   return (
     <main>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search for recipes..."
-      />
-      <div className="p-24 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
+      <div className="flex justify-center items-center gap-6">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search for recipes..."
+        />
+        <Randomiser recipes={filteredRecipes} />
+      </div>
+      <div className="p-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
         {filteredRecipes &&
           filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
