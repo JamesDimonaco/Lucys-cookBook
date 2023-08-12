@@ -29,15 +29,15 @@ function EditRecipe({ recipe }: EditRecipeProps) {
     <div>
       {!open ? (
         <button
-          className="mx-4 p-2 bg-primary text-text rounded-md mt-4"
+          className="mx-4 p-2 bg-primary text-text rounded-md mt-4 top-20 right-0 absolute"
           onClick={() => setOpen(!open)}
         >
           edit
         </button>
       ) : (
-        <div className="w-screen h-screen">
+        <div className="w-screen h-screen z-20 top-20 absolute">
           <button
-            className="mx-4 p-2 bg-primary text-text rounded-md mt-4"
+            className="mx-4 p-2 bg-primary text-text rounded-md mt-4 right-0 absolute"
             onClick={() => setOpen(!open)}
           >
             Close
