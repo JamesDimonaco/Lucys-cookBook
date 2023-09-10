@@ -1,17 +1,16 @@
 "use client";
-
+// Display.tsx
 import RecipeCard from "./Card";
-import { useEffect, useState, useCallback } from "react";
-import { debounce } from "lodash";
+import { useEffect, useState } from "react";
 import { RecipeType } from "../types/recipe";
 import Randomiser from "./Randomiser";
+import Search from "./Search";
 
 interface IProps {
   recipesFromServer: RecipeType[];
 }
 
 export default function Display({ recipesFromServer }: IProps) {
-  const [searchTerm, setSearchTerm] = useState("");
   const [originalRecipes, setOriginalRecipes] = useState<RecipeType[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<RecipeType[]>([]);
 
@@ -20,32 +19,37 @@ export default function Display({ recipesFromServer }: IProps) {
     setFilteredRecipes(recipesFromServer);
   }, [recipesFromServer]);
 
-  const debouncedSearch = useCallback(
-    debounce((searchTerm) => {
-      if (!originalRecipes) return;
-      const results = originalRecipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredRecipes(results);
-    }, 300),
-    [originalRecipes]
-  );
+  const handleSearchAndFilter = (term: string, filters: any) => {
+    if (!originalRecipes) return;
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    debouncedSearch(value);
+    let results = originalRecipes;
+
+    // Apply search term
+    if (term) {
+      results = results.filter((recipe) =>
+        recipe.title.toLowerCase().includes(term.toLowerCase())
+      );
+    }
+
+    // Apply filters
+    if (filters.type) {
+      results = results.filter(
+        (recipe) => recipe.type.toLowerCase() === filters.type
+      );
+    }
+    if (filters.difficulty) {
+      results = results.filter(
+        (recipe) => recipe.difficulty.toLowerCase() === filters.difficulty
+      );
+    }
+
+    setFilteredRecipes(results);
   };
 
   return (
     <main>
       <div className="flex justify-center items-center gap-6">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search for recipes..."
-        />
+        <Search onSearchAndFilter={handleSearchAndFilter} />
         <Randomiser recipes={filteredRecipes} />
       </div>
       <div className="p-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
