@@ -5,10 +5,16 @@ import Filters from "./Filters";
 interface ISearchBarProps {
   onSearchAndFilter: (term: string, filters: any) => void;
 }
+type FilterType =
+  | {
+      type: { title: string; value: string };
+      difficulty: { title: string; value: string };
+    }
+  | {};
 
 export default function SearchBar({ onSearchAndFilter }: ISearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState<any>({});
+  const [filters, setFilters] = useState<FilterType>({});
 
   const debouncedSearch = useCallback(
     debounce((term, filters) => {
@@ -29,8 +35,9 @@ export default function SearchBar({ onSearchAndFilter }: ISearchBarProps) {
   };
 
   return (
-    <div>
+    <div className="">
       <input
+        className="w-full h-10 px-3 rounded mb-8 focus:outline-none focus:shadow-outline text-primary"
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}

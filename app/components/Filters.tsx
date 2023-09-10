@@ -1,44 +1,58 @@
 import React, { useState } from "react";
+import Select from "./Select";
 
 interface IFiltersProps {
   onFilterChange: (filters: any) => void;
 }
 
+type Item = {
+  title: string;
+  value: string;
+};
+
 export default function Filters({ onFilterChange }: IFiltersProps) {
-  const [type, setType] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [type, setType] = useState("");
 
-  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newType = e.target.value;
-    setType(newType);
-    onFilterChange({ type: newType, difficulty });
+  const handleTypeChange = (value: string) => {
+    setType(value);
+    onFilterChange({ type: value, difficulty });
   };
 
-  const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newDifficulty = e.target.value;
-    setDifficulty(newDifficulty);
-    onFilterChange({ type, difficulty: newDifficulty });
+  const handleDifficultyChange = (value: string) => {
+    setDifficulty(value);
+    onFilterChange({ type, difficulty: value });
   };
 
+  const typeItems: Item[] = [
+    { title: "Any", value: "" },
+    { title: "Breakfast", value: "breakfast" },
+    { title: "Lunch", value: "lunch" },
+    { title: "Dinner", value: "dinner" },
+    { title: "Snack", value: "snack" },
+    { title: "Dessert", value: "dessert" },
+    { title: "Salad", value: "salad" },
+    { title: "Light meal", value: "lightmeal" },
+  ];
+
+  const difficultyItems: Item[] = [
+    { title: "Any", value: "" },
+    { title: "Easy", value: "easy" },
+    { title: "Medium", value: "medium" },
+    { title: "Hard", value: "hard" },
+  ];
   return (
-    <div>
-      <select onChange={handleTypeChange}>
-        {/* Add options for type */}
-        <option value="">All</option>
-        <option value="breakfast">Breakfast</option>
-        <option value="lunch">Lunch</option>
-        <option value="dinner">Dinner</option>
-        <option value="snack">Snack</option>
-        <option value="dessert">Dessert</option>
-        <option value="lightmeal">light Meal</option>
-      </select>
-      <select onChange={handleDifficultyChange}>
-        {/* Add options for difficulty */}
-        <option value="">Any</option>
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
+    <div className="flex gap-4 rounded w-full">
+      <Select
+        name="type"
+        items={typeItems}
+        onChange={(type: Item) => handleTypeChange(type.value)}
+      />
+      <Select
+        name="difficulty"
+        items={difficultyItems}
+        onChange={(type: Item) => handleDifficultyChange(type.value)}
+      />
     </div>
   );
 }

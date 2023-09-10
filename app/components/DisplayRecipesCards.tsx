@@ -48,7 +48,7 @@ export default function Display({ recipesFromServer }: IProps) {
 
   return (
     <main>
-      <div className="flex justify-center items-center gap-6">
+      <div className="flex justify-center items-center gap-6 bg-secondary my-4 mx-2 py-4 px-40 rounded">
         <Search onSearchAndFilter={handleSearchAndFilter} />
         <Randomiser recipes={filteredRecipes} />
       </div>
