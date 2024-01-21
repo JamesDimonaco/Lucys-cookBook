@@ -3,7 +3,7 @@
 // You need to import our styles for the button to look right. Best to import in the root /layout.tsx but this is fine
 import "@uploadthing/react/styles.css";
 
-import { UploadButton } from "../src/utils/uploadthing";
+import { UploadButton } from "../utils/uploadthing";
 
 interface ButtonProps {
   onSubmit: (imageUrl: string) => void;

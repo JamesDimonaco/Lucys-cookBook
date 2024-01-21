@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import Display from "./components/DisplayRecipesCards";
+import prisma from "@/utils/prisma";
+import Display from "../components/DisplayRecipesCards";
 
 async function getFeedData() {
   const feed = await prisma.recipe.findMany({
