@@ -1,6 +1,10 @@
+"use client";
 import { useEffect, useState, useCallback } from "react";
 import { debounce } from "lodash";
 import Filters from "./Filters";
+import { searchRecipes } from "@/actions";
+import { revalidatePath } from "next/cache";
+import Router from "next/router";
 
 interface ISearchBarProps {
   onSearchAndFilter: (term: string, filters: any) => void;
@@ -17,8 +21,12 @@ export default function SearchBar({ onSearchAndFilter }: ISearchBarProps) {
   const [filters, setFilters] = useState<FilterType>({});
 
   const debouncedSearch = useCallback(
-    debounce((term, filters) => {
-      onSearchAndFilter(term, filters);
+    debounce(async (term, filters) => {
+      // onSearchAndFilter(term, filters);
+      console.log("here");
+
+      searchRecipes(term);
+      Router.reload();
     }, 300),
     [onSearchAndFilter]
   );
@@ -26,6 +34,7 @@ export default function SearchBar({ onSearchAndFilter }: ISearchBarProps) {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
+
     debouncedSearch(value, filters);
   };
 

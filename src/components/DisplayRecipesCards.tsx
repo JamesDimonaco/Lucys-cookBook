@@ -1,10 +1,20 @@
 "use client";
 // Display.tsx
-import RecipeCard from "./Card";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { RecipeType } from "../types/recipe";
 import Randomiser from "./Randomiser";
 import Search from "./Search";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 interface IProps {
   recipesFromServer: RecipeType[];
@@ -55,7 +65,31 @@ export default function Display({ recipesFromServer }: IProps) {
       <div className="p-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
         {filteredRecipes &&
           filteredRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <Card key={recipe.id}>
+              <CardHeader>
+                <CardTitle>{recipe.title}</CardTitle>
+                <CardDescription>{recipe.type}</CardDescription>
+                <CardDescription>{recipe.difficulty}</CardDescription>
+                <CardDescription>{recipe.duration}</CardDescription>
+              </CardHeader>
+
+              <CardContent className="flex justify-center items-center">
+                <Image
+                  className="object-cover rounded-md"
+                  src={recipe.imageUrl || "/placeholder.webp"}
+                  alt={recipe.title}
+                  width={200}
+                  height={300}
+                />
+              </CardContent>
+              <CardFooter>
+                <Link href={`/recipe/${recipe.id}`} passHref>
+                  <Button className="bg-red-500" variant="link">
+                    View Recipe
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
           ))}
       </div>
     </main>

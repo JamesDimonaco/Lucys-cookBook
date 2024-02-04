@@ -1,26 +1,19 @@
-import prisma from "@/utils/prisma";
-import Display from "../components/DisplayRecipesCards";
+import RecipeCard from "@/components/recipeCard";
+import Hero from "@/components/Hero";
+import { searchRecipes } from "@/actions";
 
-async function getFeedData() {
-  const feed = await prisma.recipe.findMany({
-    include: {
-      author: true,
-    },
-  });
+type HomeProps = {
+  params: any;
+  searchParams: any;
+};
+export default async function Home({ params, searchParams }: HomeProps) {
+  const recipes: any[] = await searchRecipes("");
 
-  return feed;
-}
-
-export default async function Home() {
-  const fetchData = async () => {
-    const data = await getFeedData();
-    return data;
-  };
-
-  const recipes: any[] = await fetchData();
   return (
-    <main>
-      <Display recipesFromServer={recipes} />
+    <main className="p-16 ">
+      {/* <Display recipesFromServer={recipes} /> */}
+      <Hero recipesFromServer={recipes} />
+      <RecipeCard recipes={recipes} />
     </main>
   );
 }

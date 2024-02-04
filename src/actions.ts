@@ -128,3 +128,30 @@ export async function postRecipe(recipe: any) {
 
   redirect(`/recipe/${createdRecipe.id}`);
 }
+
+export async function searchRecipes(searchTerm: string) {
+  const recipes = await prisma.recipe.findMany({
+    include: {
+      author: true,
+    },
+    where: {
+      OR: [
+        {
+          title: {
+            contains: searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          tags: {
+            hasSome: searchTerm.split(","),
+          },
+        },
+      ],
+    },
+  });
+
+  revalidatePath("/");
+
+  return recipes;
+}
