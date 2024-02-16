@@ -1,20 +1,36 @@
 import RecipeCard from "@/components/recipeCard";
-import Hero from "@/components/Hero";
-import { searchRecipes } from "@/actions";
-import { HomePage } from "@/components/home-page";
+import { SkeletonCard } from "@/components/ui/skeletonCard";
+import { getRecipes } from "@/functions/recipes";
+import { FilterIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import SearchBar from "@/components/Search";
 
 type HomeProps = {
   params: any;
-  searchParams: any;
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 export default async function Home({ params, searchParams }: HomeProps) {
-  const recipes: any[] = await searchRecipes("");
+  const limit = searchParams.limit
+    ? parseInt(searchParams.limit as string)
+    : 10;
+  const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
+
+  const recipes = await getRecipes(limit, skip);
+  if (!recipes) return <SkeletonCard />;
 
   return (
-    <main>
-      {/* <Hero recipesFromServer={recipes} /> */}
-      {/* <RecipeCard recipes={recipes} /> */}
-      <HomePage />
+    <main className="flex flex-col gap-8 p-4 md:p-6">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center">
+        <SearchBar />
+        <Button className="w-full md:w-auto" variant="outline">
+          <FilterIcon className="h-5 w-5 mr-2" />
+          Filter
+        </Button>
+      </div>
+      {recipes.map((recipe) => (
+        <RecipeCard key={recipe.id} recipe={recipe} />
+      ))}
     </main>
   );
 }

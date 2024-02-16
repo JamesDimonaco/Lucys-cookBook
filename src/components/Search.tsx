@@ -1,14 +1,9 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
-import { debounce } from "lodash";
-import Filters from "./Filters";
-import { searchRecipes } from "@/actions";
-import { revalidatePath } from "next/cache";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "./ui/input";
+import { useDebounce } from "use-debounce";
 
-interface ISearchBarProps {
-  onSearchAndFilter: (term: string, filters: any) => void;
-}
 type FilterType =
   | {
       type: { title: string; value: string };
@@ -16,43 +11,26 @@ type FilterType =
     }
   | {};
 
-export default function SearchBar({ onSearchAndFilter }: ISearchBarProps) {
+export default function SearchBar() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<FilterType>({});
+  const [query] = useDebounce(searchTerm, 500);
 
-  const debouncedSearch = useCallback(
-    debounce(async (term, filters) => {
-      // onSearchAndFilter(term, filters);
-      console.log("here");
-
-      searchRecipes(term);
-      Router.reload();
-    }, 300),
-    [onSearchAndFilter]
-  );
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    debouncedSearch(value, filters);
-  };
-
-  const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-    debouncedSearch(searchTerm, newFilters);
-  };
+  useEffect(() => {
+    if (!query) {
+      router.push("/");
+      return;
+    }
+    router.push(`/?search=${query}`);
+  }, [query, router]);
 
   return (
-    <div className="">
-      <input
-        className="w-full h-10 px-3 rounded mb-8 focus:outline-none focus:shadow-outline text-primary"
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search for recipes..."
-      />
-      <Filters onFilterChange={handleFilterChange} />
-    </div>
+    <Input
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="flex-1"
+      placeholder="Search recipes..."
+      type="search"
+    />
   );
 }
