@@ -18,8 +18,18 @@ import {
   Select,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import useIngredientSections from "@/hooks/useIngredientSections";
 
-export default function Form2() {
+export default function NewRecipeForm() {
+  const {
+    ingredientSections,
+    addIngredientSection,
+    addIngredient,
+    removeIngredient,
+    updateSectionTitle,
+    updateIngredientName,
+  } = useIngredientSections();
+
   return (
     <Card>
       <CardHeader>
@@ -35,6 +45,10 @@ export default function Form2() {
             <Input id="title" placeholder="Enter recipe title" />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="title">Description</Label>
+            <Input id="description" placeholder="Enter recipe description" />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
             <Textarea id="content" placeholder="Enter recipe content" />
           </div>
@@ -46,7 +60,7 @@ export default function Form2() {
             <Label htmlFor="difficulty">Difficulty</Label>
             <Select>
               <SelectTrigger id="difficulty">
-                <SelectValue placeholder="Select difficulty" />
+                <SelectValue placeholder="Select difficulty " />
               </SelectTrigger>
               <SelectContent position="popper">
                 <SelectItem value="easy">Easy</SelectItem>
@@ -57,24 +71,68 @@ export default function Form2() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" placeholder="Enter duration" />
+            <Input
+              type="number"
+              id="duration"
+              placeholder="Enter duration in minutes"
+            />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="ingredients">Ingredients</Label>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <Label htmlFor="ingredient-1">Ingredient 1</Label>
-                <Input id="ingredient-1" placeholder="Enter ingredient" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="ingredient-2">Ingredient 2</Label>
-                <Input id="ingredient-2" placeholder="Enter ingredient" />
-              </div>
+          {ingredientSections.map((section) => (
+            <div key={section.id} className="space-y-2">
+              <Label htmlFor={section.id}>{section.title}</Label>
+              <Input
+                id={section.id}
+                placeholder="Enter section title"
+                onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+              />
+              {section.ingredients.map((ingredient) => (
+                <div
+                  key={ingredient.id}
+                  className="flex items-center space-x-2"
+                >
+                  <Input
+                    placeholder="Enter ingredient"
+                    value={ingredient.name}
+                    onChange={(e) =>
+                      updateIngredientName(
+                        section.id,
+                        ingredient.id,
+                        e.target.value
+                      )
+                    }
+                  />
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeIngredient(section.id, ingredient.id);
+                    }}
+                    variant="destructive"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  addIngredient(section.id);
+                }}
+                className="w-full"
+              >
+                Add Ingredient
+              </Button>
             </div>
-            <Button className="w-full" variant="outline">
-              Add Ingredient
-            </Button>
-          </div>
+          ))}
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              addIngredientSection();
+            }}
+            variant="outline"
+            className="w-full"
+          >
+            Add Ingredient Section
+          </Button>
           <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
             <Textarea id="notes" placeholder="Enter notes" />
@@ -100,10 +158,14 @@ export default function Form2() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="makes">Makes</Label>
-            <Input id="makes" placeholder="Enter number of servings" />
+            <Input
+              type="number"
+              id="makes"
+              placeholder="Enter number of servings"
+            />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="where-from">Where From</Label>
+            <Label htmlFor="where-from">Source</Label>
             <Input id="where-from" placeholder="Enter source" />
           </div>
         </form>
