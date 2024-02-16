@@ -1,5 +1,5 @@
-import Form from "../../components/Form";
-import { postRecipe } from "../../actions";
+import Form from "../../../components/Form";
+import { postRecipe } from "../../../actions";
 import Form2 from "@/components/ui/Form";
 
 export default async function Recipes() {
