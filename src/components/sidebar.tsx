@@ -26,7 +26,7 @@ export async function Sidebar() {
   const userImage = session?.user?.image || "";
 
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full flex-col gap-2 col-span-1">
       <div className="flex h-[60px] justify-between items-center border-b px-6">
         <Link className="flex items-center gap-2 font-semibold" href="/">
           <BookOpenIcon className="h-6 w-6" />

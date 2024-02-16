@@ -23,7 +23,7 @@ export default async function Home({ params, searchParams }: HomeProps) {
   if (!recipes) return <SkeletonCard />;
 
   return (
-    <main className="flex flex-col gap-8 p-4 md:p-6">
+    <main className="flex flex-col gap-8 p-4 md:p-6 md:col-span-2 lg:col-span-3">
       <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center">
         <SearchBar />
         <Button className="w-full md:w-auto" variant="outline">
@@ -31,9 +31,11 @@ export default async function Home({ params, searchParams }: HomeProps) {
           Filter
         </Button>
       </div>
-      {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} />
-      ))}
+      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
+        ))}
+      </section>
     </main>
   );
 }
