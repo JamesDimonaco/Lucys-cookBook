@@ -14,10 +14,13 @@ export function Sidebar() {
   return (
     <div>
       <div className="flex h-full flex-col gap-2">
-        <div className="flex h-[60px] items-center border-b px-6">
+        <div className="flex h-[60px] justify-between items-center border-b px-6">
           <Link className="flex items-center gap-2 font-semibold" href="/">
             <BookOpenIcon className="h-6 w-6" />
             <span className="">Recipes</span>
+          </Link>
+          <Link href="/recipe">
+            <Button>Add</Button>
           </Link>
         </div>
         <div className="flex-1 overflow-auto p-4">
