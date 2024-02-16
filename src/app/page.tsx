@@ -5,6 +5,7 @@ import { FilterIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/Search";
+import { auth } from "@/utils/auth";
 
 type HomeProps = {
   params: any;

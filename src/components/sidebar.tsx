@@ -9,8 +9,12 @@ import {
   ClockIcon,
   TagIcon,
 } from "lucide-react";
+import { auth } from "@/utils/auth";
 
-export function Sidebar() {
+export async function Sidebar() {
+  const session = await auth();
+  console.log(session);
+
   return (
     <div>
       <div className="flex h-full flex-col gap-2">
@@ -19,9 +23,18 @@ export function Sidebar() {
             <BookOpenIcon className="h-6 w-6" />
             <span className="">Recipes</span>
           </Link>
-          <Link href="/recipe">
+          {session ? (
+            <Link href="/api/auth/signout">
+              <Button>Logout</Button>
+            </Link>
+          ) : (
+            <Link href="/api/auth/signin">
+              <Button>Login</Button>
+            </Link>
+          )}
+          {/* <Link href="/recipe">
             <Button>Add</Button>
-          </Link>
+          </Link> */}
         </div>
         <div className="flex-1 overflow-auto p-4">
           <nav className="grid items-start px-4 text-sm font-medium">
