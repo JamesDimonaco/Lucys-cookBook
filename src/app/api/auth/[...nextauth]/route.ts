@@ -2,7 +2,7 @@ import { handlers } from "@/utils/auth";
 import type { NextRequest } from "next/server";
 
 const { GET: AuthGET, POST } = handlers;
-export { POST, AuthGET };
+export { POST };
 
 // Showcasing advanced initialization in Route Handlers
 export async function GET(request: NextRequest) {
