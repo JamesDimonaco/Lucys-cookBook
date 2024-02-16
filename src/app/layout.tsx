@@ -18,11 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
-        {" "}
-        {/* <header className="bg-secondary sticky top-0 z-50">
-          <Header />
-        </header> */}
-        <main className="grid max-w-6xl min-h-screen w-full gap-4 p-4 mx-auto lg:grid-cols-[250px_1fr]">
+        <main className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Sidebar />
           {children}
         </main>

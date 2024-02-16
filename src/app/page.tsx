@@ -16,7 +16,9 @@ export default async function Home({ params, searchParams }: HomeProps) {
     : 10;
   const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
 
-  const recipes = await getRecipes(limit, skip);
+  const search = searchParams.search ? (searchParams.search as string) : "";
+
+  const { recipes, error } = await getRecipes({ limit, skip, search });
   if (!recipes) return <SkeletonCard />;
 
   return (
