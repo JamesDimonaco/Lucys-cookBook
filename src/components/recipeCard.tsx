@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { RecipeType } from "../types/recipe";
+import { Recipe } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -11,38 +12,37 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
+import { StarIcon } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
-function RecipeCard({ recipes }: { recipes: RecipeType[] }) {
+function RecipeCard({ recipe }: { recipe: Recipe }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-5 gap-4 ">
-      {recipes.map((recipe) => (
-        <Card key={recipe.id}>
-          <CardHeader>
-            <CardTitle>{recipe.title}</CardTitle>
-            <CardDescription>{recipe.type}</CardDescription>
-            <CardDescription>{recipe.difficulty}</CardDescription>
-            <CardDescription>{recipe.duration}</CardDescription>
-          </CardHeader>
+    <Card key={recipe.id}>
+      <Link href={`/recipe/${recipe.id}`}>
+        <CardContent className=" flex flex-col gap-4">
+          <Image
+            alt="Recipe image"
+            className="aspect-[3/2] object-cover rounded-lg overflow-hidden "
+            height={200}
+            src={recipe.imageUrl || "/placeholder.webp"}
+            width={300}
+          />
+          <h3 className="text-lg font-semibold">{recipe.title}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {recipe.description}
+          </p>
+        </CardContent>
+      </Link>
 
-          <CardContent className="flex justify-center items-center">
-            <Image
-              className="object-cover rounded-md"
-              src={recipe.imageUrl || "/placeholder.webp"}
-              alt={recipe.title}
-              width={300}
-              height={100}
-            />
-          </CardContent>
-          <CardFooter>
-            <Link href={`/recipe/${recipe.id}`} passHref>
-              <Button className="bg-red-500" variant="link">
-                View Recipe
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
+      <CardFooter>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {recipe.duration} mins
+        </span>
+        <Button className="ml-auto" variant="ghost">
+          <StarIcon className="h-5 w-5 mr-2" />
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 

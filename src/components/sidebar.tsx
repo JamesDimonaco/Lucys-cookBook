@@ -19,10 +19,6 @@ export function Sidebar() {
             <BookOpenIcon className="h-6 w-6" />
             <span className="">Recipes</span>
           </Link>
-          <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-            <SearchIcon className="h-4 w-4" />
-            <span className="sr-only">Toggle search</span>
-          </Button>
         </div>
         <div className="flex-1 overflow-auto p-4">
           <nav className="grid items-start px-4 text-sm font-medium">

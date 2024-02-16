@@ -5,11 +5,6 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/utils/tw-merge";
 import { Sidebar } from "@/components/sidebar";
 
-export const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
 export const metadata = {
   title: "Lucy's Recipes",
   description: "A collection of recipes from Lucy's kitchen and friends",
@@ -22,12 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
+      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         {" "}
         {/* <header className="bg-secondary sticky top-0 z-50">
           <Header />

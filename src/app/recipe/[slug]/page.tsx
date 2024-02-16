@@ -1,10 +1,11 @@
 import prisma from "@/utils/prisma";
 import EditRecipe from "@/components/EditRecipe";
 import { FullRecipeTypeFromPrisma } from "../../../types/recipe";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { Recipe } from "@/components/recipe";
+
 export interface IngredientSectionType {
   title: string;
   ingredients: IngredientType[];
@@ -35,7 +36,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   };
 
   const recipeData: FullRecipeTypeFromPrisma | null = await fetchData();
-  // if (!recipe) return <div>Recipe not found</div>;
+  if (!recipeData) notFound();
 
   const deleteRecipe = async () => {
     "use server";

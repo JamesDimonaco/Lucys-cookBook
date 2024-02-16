@@ -23,6 +23,7 @@ model Recipe {
   tags      String[]
   type      String?
   makes     Int?
+  description String?
   whereFrom String?  @map(name: "where_from")
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")

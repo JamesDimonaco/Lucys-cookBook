@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Recipe } from "@prisma/client";
 
 // This type represents the full recipe fetched from Prisma with all nested relations
 export type FullRecipeTypeFromPrisma = Prisma.RecipeGetPayload<{
@@ -16,7 +16,6 @@ export interface IngredientSectionType {
   title: string;
   ingredients: string[];
 }
-
 export interface RecipeType {
   title: string;
   content: string;
@@ -27,6 +26,7 @@ export interface RecipeType {
   type: string;
   tags: string[];
   whereFrom: string;
-  id?: string;
+  id: string;
+  description?: string;
   ingredientSections: any[];
 }
