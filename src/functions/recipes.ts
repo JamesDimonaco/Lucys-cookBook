@@ -30,16 +30,18 @@ export const getRecipes = async ({
     const recipes = await prisma.recipe.findMany({
       take: limit,
       skip: skip,
-      where: search ? {
-        OR: [
-          { title: { contains: search } },
-          { content: { contains: search } },
-          { description: { contains: search } },
-          { tags: { hasSome: [search] } },
-        ],
-      } : {},
+      where: search
+        ? {
+            OR: [
+              { title: { contains: search } },
+              { content: { contains: search } },
+              { description: { contains: search } },
+              { tags: { hasSome: [search] } },
+            ],
+          }
+        : {},
     });
-    return { recipes: recipes };
+    return { recipes: JSON.parse(JSON.stringify(recipes)) };
   } catch (error) {
     console.error("Error fetching recipes:", error);
     return { error: error };

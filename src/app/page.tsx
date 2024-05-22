@@ -6,20 +6,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/Search";
 import { auth } from "@/utils/auth";
+import { fetchPecipes } from "@/actions";
+import InfiniteScrollRecipes from "@/components/InfiniteScrollRecipes";
 
 type HomeProps = {
   params: any;
   searchParams: { [key: string]: string | string[] | undefined };
 };
 export default async function Home({ params, searchParams }: HomeProps) {
-  const limit = searchParams.limit
-    ? parseInt(searchParams.limit as string)
-    : 10;
-  const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
+  // const limit = searchParams.limit
+  //   ? parseInt(searchParams.limit as string)
+  //   : 20;
+  // const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
 
   const search = searchParams.search ? (searchParams.search as string) : "";
 
-  const { recipes, error } = await getRecipes({ limit, skip, search });
+  const recipes = await fetchPecipes({ search });
   if (!recipes) return <SkeletonCard />;
 
   return (
@@ -30,12 +32,9 @@ export default async function Home({ params, searchParams }: HomeProps) {
           <FilterIcon className="h-5 w-5 mr-2" />
           Filter
         </Button>
+        <Button value="primary">Create Recipe</Button>
       </div>
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
-      </section>
+      <InfiniteScrollRecipes initalRecipes={recipes} search={search} />
     </main>
   );
 }

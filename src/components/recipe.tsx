@@ -59,13 +59,7 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
         </div>
         <div className="prose max-w-none">
           <h2>Introduction</h2>
-          <p>
-            Chocolate chip cookies are a classic treat loved by both kids and
-            adults. The combination of buttery dough and sweet chocolate chips
-            is simply irresistible. In this recipe, I&apos;ll show you how to
-            make the perfect chocolate chip cookies that are golden brown on the
-            outside, soft and chewy on the inside.
-          </p>
+          <p>{data.description}</p>
         </div>
         <div className="border-t" />
         <div className="space-y-4">
@@ -99,7 +93,7 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
               Follow these steps to make the {data.title}:
             </p>
           </div>
-          {/* <div>{parse(data.content)}</div> */}
+          <div>{parse(data.content ?? "")}</div>
           {/* <ol className="prose list-decimal list-inside">
               <li>
                 Preheat the oven to 375°F (190°C). Line a baking sheet with

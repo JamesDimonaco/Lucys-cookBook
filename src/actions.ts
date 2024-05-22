@@ -3,6 +3,7 @@ import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { IngredientSectionType, RecipeType } from "./types/recipe";
+import { getRecipes } from "./functions/recipes";
 
 function extractFormData(recipe: any): Record<string, any> {
   const data: Record<string, any> = {};
@@ -154,4 +155,22 @@ export async function searchRecipes(searchTerm: string) {
   revalidatePath("/");
 
   return recipes;
+}
+
+export async function fetchPecipes({
+  limit = 10,
+  skip = 0,
+  search,
+}: {
+  limit?: number;
+  skip?: number;
+  search?: string;
+}) {
+  try {
+    const { recipes } = await getRecipes({ limit, skip, search });
+    return recipes;
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return { error: error };
+  }
 }

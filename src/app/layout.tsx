@@ -6,8 +6,8 @@ import { cn } from "@/utils/tw-merge";
 import { Sidebar } from "@/components/sidebar";
 
 export const metadata = {
-  title: "Lucy's Recipes",
-  description: "A collection of recipes from Lucy's kitchen and friends",
+  title: "Recipe Book",
+  description: "A collection of recipes from your kitchen and friends",
 };
 
 export default function RootLayout({
@@ -18,9 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
-        <main className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-          <Sidebar />
-          {children}
+        <main className="grid gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+          <div className="sticky top-0 h-screen">
+            <Sidebar />
+          </div>
+          <div className="md:col-span-2  lg:col-span-3 flex flex-grow">
+            {children}
+          </div>
         </main>
       </body>
     </html>
