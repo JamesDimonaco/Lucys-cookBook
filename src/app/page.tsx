@@ -8,6 +8,7 @@ import SearchBar from "@/components/Search";
 import { auth } from "@/utils/auth";
 import { fetchPecipes } from "@/actions";
 import InfiniteScrollRecipes from "@/components/InfiniteScrollRecipes";
+import Link from "next/link";
 
 type HomeProps = {
   params: any;
@@ -20,6 +21,7 @@ export default async function Home({ params, searchParams }: HomeProps) {
   // const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
 
   const search = searchParams.search ? (searchParams.search as string) : "";
+  const session = await auth();
 
   const recipes = await fetchPecipes({ search });
   if (!recipes) return <SkeletonCard />;
@@ -32,7 +34,11 @@ export default async function Home({ params, searchParams }: HomeProps) {
           <FilterIcon className="h-5 w-5 mr-2" />
           Filter
         </Button>
-        <Button value="primary">Create Recipe</Button>
+        {session && (
+          <Link href="/recipe/new">
+            <Button value="primary">Create Recipe</Button>{" "}
+          </Link>
+        )}
       </div>
       <InfiniteScrollRecipes initalRecipes={recipes} search={search} />
     </main>

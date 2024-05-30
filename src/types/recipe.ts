@@ -11,7 +11,6 @@ export type FullRecipeTypeFromPrisma = Prisma.RecipeGetPayload<{
     };
   };
 }>;
-
 export interface Ingredient {
   id: string;
   name: string;
