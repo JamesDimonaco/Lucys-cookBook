@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { RecipeType } from "../types/recipe";
+import { IRecipe } from "../types/recipeTypes";
 import { Recipe } from "@prisma/client";
 import {
   Card,
@@ -15,7 +15,7 @@ import { Button } from "./ui/button";
 import { StarIcon } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 
-function RecipeCard({ recipe }: { recipe: Recipe }) {
+function RecipeCard({ recipe }: { recipe: IRecipe }) {
   return (
     <Card key={recipe.id}>
       <Link href={`/recipe/${recipe.id}`}>

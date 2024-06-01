@@ -1,11 +1,11 @@
 "use client";
 
 import { GiCardRandom } from "react-icons/gi";
-import { RecipeType } from "../types/recipe";
+import { IRecipe } from "../types/recipeTypes";
 import { useRouter } from "next/navigation";
 
 interface RandomiserProps {
-  recipes: RecipeType[];
+  recipes: IRecipe[];
 }
 
 export default function Randomiser({ recipes }: RandomiserProps) {

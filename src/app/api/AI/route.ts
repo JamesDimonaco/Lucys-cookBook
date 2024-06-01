@@ -10,8 +10,8 @@ import { z } from "zod";
 
 export async function POST(req: Request, res: Response) {
   const { messages, prompt } = await req.json();
-
   console.log(prompt);
+
   try {
     const result = await streamObject({
       model: openai("gpt-4-vision-preview"),
@@ -21,12 +21,12 @@ export async function POST(req: Request, res: Response) {
           content: [
             {
               type: "text",
-              text: "this is a recipe, can you give me the title, ingredients, and instructions?",
+              text: "this is a recipe, need you to return to me the title, ingredients, instructions, cook-time, difficuly, servings",
             },
             {
               type: "image",
               image: new URL(
-                "https://cdn.discordapp.com/attachments/727496094019485797/1246425611577331712/Untitled.PNG?ex=665c57cf&is=665b064f&hm=42b3c49387f1bc5581617ac35a6fe90926b6934119b7dff3167628ec14cfca59&"
+                "https://cdn.discordapp.com/attachments/727496094019485797/1246435797834666064/image.png?ex=665c614b&is=665b0fcb&hm=8cad6148f6ae57a9fe2408749931fa7da143d8c1ae9c2f0ea2fbb98dc837e578&"
               ),
             },
           ],
@@ -36,6 +36,9 @@ export async function POST(req: Request, res: Response) {
         title: z.string(),
         ingredients: z.string(),
         instructions: z.string(),
+        cookTime: z.string(),
+        difficulty: z.string(),
+        servings: z.number(),
       }),
     });
 

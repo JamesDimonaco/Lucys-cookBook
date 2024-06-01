@@ -2,8 +2,9 @@
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { IngredientSectionType, RecipeType } from "./types/recipe";
+import { IIngredientSection, IRecipe } from "./types/recipeTypes";
 import { getRecipes } from "./functions/recipes";
+import { Prisma } from "@prisma/client";
 
 function extractFormData(recipe: any): Record<string, any> {
   const data: Record<string, any> = {};
@@ -15,19 +16,19 @@ function extractFormData(recipe: any): Record<string, any> {
 
 function prepareIngredientSections(
   data: Record<string, any>
-): IngredientSectionType[] {
-  const sections: IngredientSectionType[] = [];
-  let i = 0;
-
-  while (data[`ingredientTitle${i}`]) {
-    sections.push({
-      title: data[`ingredientTitle${i}`],
-      ingredients: data[`ingredients${i}`].split(","),
-    });
-    i++;
-  }
-
-  return sections;
+): IIngredientSection[] {
+  return Object.entries(data)
+    .filter(([key]) => key.startsWith("ingredientTitle"))
+    .map(([key, value], index) => ({
+      id: data[`ingredientId${index}`] || null,
+      title: value,
+      ingredients: {
+        create:
+          data[`ingredients${index}`]?.split(",").map((ingredient: string) => ({
+            name: ingredient.trim(),
+          })) || [],
+      },
+    }));
 }
 
 async function deleteExistingIngredientSections(recipeId: string) {
@@ -47,7 +48,7 @@ export const editRecipe = async (recipe: any) => {
   const formData = extractFormData(recipe);
   const ingredientSections = prepareIngredientSections(formData);
 
-  const recipeData: RecipeType = {
+  const recipeData: IRecipe = {
     title: formData.title,
     content: formData.content,
     imageUrl: formData.imageUrl || null,
@@ -57,31 +58,17 @@ export const editRecipe = async (recipe: any) => {
     tags: formData.tags ? formData.tags.split(",") : [],
     type: formData.type || "none",
     whereFrom: formData.whereFrom || "",
-    ingredientSections: ingredientSections.map((section) => ({
-      title: section.title,
-      ingredients: {
-        create: section.ingredients.map((ingredient) => ({ name: ingredient })),
-      },
-    })),
+    ingredientSections: ingredientSections,
     id: formData.id,
   };
-
-  await deleteExistingIngredientSections(formData.id);
 
   const updatedRecipe = await prisma.recipe.update({
     where: { id: formData.id },
     data: {
       ...recipeData,
       ingredientSections: {
-        deleteMany: {}, // This deletes all the associated ingredient sections
-        create: ingredientSections.map((section) => ({
-          title: section.title,
-          ingredients: {
-            create: section.ingredients.map((ingredient) => ({
-              name: ingredient,
-            })),
-          },
-        })),
+        deleteMany: {},
+        create: ingredientSections,
       },
     },
     include: {
@@ -97,9 +84,15 @@ export const editRecipe = async (recipe: any) => {
   return updatedRecipe;
 };
 
-export async function postRecipe(recipe: any) {
+export async function postRecipe(recipe: FormData) {
+  console.log("Posting recipe");
+  console.log(recipe);
+
   const formData = extractFormData(recipe);
   const ingredientSections = prepareIngredientSections(formData);
+
+  console.log("Form data", formData);
+  console.log("Ingredient sections", ingredientSections);
 
   const recipeData = {
     title: formData.title,
@@ -112,22 +105,17 @@ export async function postRecipe(recipe: any) {
     type: formData.type || "none",
     whereFrom: formData.whereFrom || "",
     ingredientSections: {
-      create: ingredientSections.map((section) => ({
-        title: section.title,
-        ingredients: {
-          create: section.ingredients.map((ingredient) => ({
-            name: ingredient,
-          })),
-        },
-      })),
+      create: ingredientSections,
     },
   };
 
-  const createdRecipe = await prisma.recipe.create({ data: recipeData });
-  revalidatePath(`/`);
-  revalidatePath(`/recipe/${createdRecipe.id}`);
+  console.log("Recipe data", recipeData);
 
-  redirect(`/recipe/${createdRecipe.id}`);
+  // const createdRecipe = await prisma.recipe.create({ data: recipeData });
+  // revalidatePath(`/`);
+  // revalidatePath(`/recipe/${createdRecipe.id}`);
+
+  // redirect(`/recipe/${createdRecipe.id}`);
 }
 
 export async function searchRecipes(searchTerm: string) {

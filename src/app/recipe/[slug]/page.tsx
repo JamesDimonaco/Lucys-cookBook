@@ -1,6 +1,6 @@
 import prisma from "@/utils/prisma";
 import EditRecipe from "@/components/EditRecipe";
-import { FullRecipeTypeFromPrisma } from "../../../types/recipe";
+import { FullRecipeTypeFromPrisma } from "../../../types/recipeTypes";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";

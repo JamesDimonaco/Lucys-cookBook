@@ -1,5 +1,5 @@
 "use client";
-import { FullRecipeTypeFromPrisma, RecipeType } from "../types/recipe";
+import { FullRecipeTypeFromPrisma, RecipeType } from "../types/recipeTypes";
 import React, { useState } from "react";
 import Form from "./Form";
 import { editRecipe } from "../actions";

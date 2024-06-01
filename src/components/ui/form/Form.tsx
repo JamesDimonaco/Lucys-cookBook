@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import useIngredientSections from "@/hooks/useIngredientSections";
+import { IIngredient } from "@/types/recipeTypes";
+import IngredientSection from "./IngredientSection";
 
-export default function NewRecipeForm() {
+export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
   const {
     ingredientSections,
     addIngredientSection,
@@ -40,27 +42,42 @@ export default function NewRecipeForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form
+            action={uploadRecipe}
+            className=" grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="Enter recipe title" />
+              <Input name="title" id="title" placeholder="Enter recipe title" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Input id="description" placeholder="Enter recipe description" />
+              <Input
+                name="description"
+                id="description"
+                placeholder="Enter recipe description"
+              />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="content">Content</Label>
-              <Textarea id="content" placeholder="Enter recipe content" />
+              <Textarea
+                name="content"
+                id="content"
+                placeholder="Enter recipe content"
+              />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="image-url">Image URL</Label>
-              <Input id="image-url" placeholder="Enter image URL" />
+              <Input
+                name="image-url"
+                id="image-url"
+                placeholder="Enter image URL"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
               <Select>
-                <SelectTrigger id="difficulty">
+                <SelectTrigger name="difficulty" id="difficulty">
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
                 <SelectContent position="popper">
@@ -73,12 +90,14 @@ export default function NewRecipeForm() {
             <div className="space-y-2">
               <Label htmlFor="duration">Duration</Label>
               <Input
+                name="duration"
                 type="number"
                 id="duration"
                 placeholder="Enter duration in minutes"
               />
             </div>
-            {ingredientSections.map((section) => (
+            <IngredientSection />
+            {/* {ingredientSections.map((section) => (
               <div
                 key={section.id}
                 className="space-y-2 col-span-1 md:col-span-2"
@@ -91,7 +110,7 @@ export default function NewRecipeForm() {
                     updateSectionTitle(section.id, e.target.value)
                   }
                 />
-                {section.ingredients.map((ingredient) => (
+                {section.ingredients.map((ingredient: IIngredient) => (
                   <div
                     key={ingredient.id}
                     className="flex items-center space-x-2"
@@ -138,7 +157,8 @@ export default function NewRecipeForm() {
               className="w-full col-span-1 md:col-span-2"
             >
               Add Ingredient Section
-            </Button>
+            </Button> */}
+
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="notes">Notes</Label>
               <Textarea id="notes" placeholder="Enter notes" />
@@ -174,13 +194,13 @@ export default function NewRecipeForm() {
               <Label htmlFor="where-from">Source</Label>
               <Input id="where-from" placeholder="Enter source" />
             </div>
+            <CardFooter className="col-span-2">
+              <Button className="w-full" type="submit">
+                Upload Recipe
+              </Button>
+            </CardFooter>
           </form>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full" type="submit">
-            Upload Recipe
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

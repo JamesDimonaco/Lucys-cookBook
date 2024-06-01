@@ -16,7 +16,7 @@ export default function Button({ onSubmit }: ButtonProps) {
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           if (!res) return;
-          onSubmit(res[0].fileUrl);
+          onSubmit(res[0].url);
           console.log("Files: ", res);
           alert("Upload Completed");
         }}
