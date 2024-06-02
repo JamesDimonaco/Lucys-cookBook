@@ -19,9 +19,9 @@ export interface IIngredient {
 }
 
 export interface IIngredientSection {
-  id: string | null;
+  id: string;
   title: string;
-  ingredients: IIngredient[] | null;
+  ingredients: IIngredient[];
 }
 
 export interface IRecipe {

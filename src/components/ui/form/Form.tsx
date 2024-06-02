@@ -46,20 +46,12 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
             action={uploadRecipe}
             className=" grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-2">
               <Label htmlFor="title">Title</Label>
               <Input name="title" id="title" placeholder="Enter recipe title" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Input
-                name="description"
-                id="description"
-                placeholder="Enter recipe description"
-              />
-            </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
-              <Label htmlFor="content">Content</Label>
+              <Label htmlFor="content">Method</Label>
               <Textarea
                 name="content"
                 id="content"
@@ -161,16 +153,16 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
 
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="notes">Notes</Label>
-              <Textarea id="notes" placeholder="Enter notes" />
+              <Textarea name="notes" id="notes" placeholder="Enter notes" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="tags">Tags</Label>
-              <Input id="tags" placeholder="Enter tags" />
+              <Input name="tags" id="tags" placeholder="Enter tags" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>
               <Select>
-                <SelectTrigger id="type">
+                <SelectTrigger name="type" id="type">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent position="popper">
@@ -183,16 +175,17 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="makes">Makes</Label>
+              <Label htmlFor="makes">Servings</Label>
               <Input
+                name="servings"
                 type="number"
-                id="makes"
+                id="servings"
                 placeholder="Enter number of servings"
               />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="where-from">Source</Label>
-              <Input id="where-from" placeholder="Enter source" />
+              <Input name="source" id="where-from" placeholder="Enter source" />
             </div>
             <CardFooter className="col-span-2">
               <Button className="w-full" type="submit">

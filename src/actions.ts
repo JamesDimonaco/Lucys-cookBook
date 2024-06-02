@@ -2,51 +2,95 @@
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { IIngredientSection, IRecipe } from "./types/recipeTypes";
+import { IIngredient, IIngredientSection, IRecipe } from "./types/recipeTypes";
 import { getRecipes } from "./functions/recipes";
 import { Prisma } from "@prisma/client";
 
-function extractFormData(recipe: any): Record<string, any> {
+function extractFormData(recipe: FormData): Record<string, any> {
   const data: Record<string, any> = {};
-  for (let pair of recipe.entries()) {
+  for (let pair of Array.from(recipe.entries())) {
     data[pair[0]] = pair[1];
   }
   return data;
 }
 
 function prepareIngredientSections(
-  data: Record<string, any>
-): IIngredientSection[] {
-  return Object.entries(data)
-    .filter(([key]) => key.startsWith("ingredientTitle"))
-    .map(([key, value], index) => ({
-      id: data[`ingredientId${index}`] || null,
-      title: value,
-      ingredients: {
-        create:
-          data[`ingredients${index}`]?.split(",").map((ingredient: string) => ({
-            name: ingredient.trim(),
-          })) || [],
-      },
-    }));
-}
+  formData: Record<string, any>
+): Prisma.IngredientSectionCreateWithoutRecipeInput[] {
+  const ingredientSections: Prisma.IngredientSectionCreateWithoutRecipeInput[] =
+    [];
 
-async function deleteExistingIngredientSections(recipeId: string) {
-  const existingSections = await prisma.ingredientSection.findMany({
-    where: { recipeId: recipeId },
+  const sectionIndices = Object.keys(formData)
+    .filter((key) => key.startsWith("ingredientSectionTitle-"))
+    .map((key) => key.split("-")[1]);
+
+  sectionIndices.forEach((index) => {
+    const title = formData[`ingredientSectionTitle-${index}`];
+
+    const sectionIngredients = Object.keys(formData)
+      .filter((key) => key.startsWith(`ingredient-${index}-`))
+      .map((key) => ({
+        id: key.split("-")[2],
+        name: formData[key],
+      }));
+
+    const ingredientSection: Prisma.IngredientSectionCreateWithoutRecipeInput =
+      {
+        title,
+        ingredients: {
+          create: sectionIngredients
+            .filter(({ name }) => name)
+            .map(({ name }) => ({ name })),
+        },
+      };
+
+    ingredientSections.push(ingredientSection);
   });
 
-  for (let section of existingSections) {
-    await prisma.ingredient.deleteMany({
-      where: { ingredientSectionId: section.id },
-    });
-    await prisma.ingredientSection.delete({ where: { id: section.id } });
-  }
+  return ingredientSections;
 }
 
-export const editRecipe = async (recipe: any) => {
+export const deleteRecipe = async (recipeId: string) => {
+  console.log("Deleting recipe with ID:", recipeId);
+
+  try {
+    // Delete the associated ingredients first
+    await prisma.ingredient.deleteMany({
+      where: {
+        ingredientSection: {
+          recipeId: recipeId,
+        },
+      },
+    });
+
+    // Delete the associated ingredientSections
+    await prisma.ingredientSection.deleteMany({
+      where: {
+        recipeId: recipeId,
+      },
+    });
+
+    // Delete the recipe
+    const deletedRecipe = await prisma.recipe.delete({
+      where: {
+        id: recipeId,
+      },
+    });
+
+    console.log("Recipe deleted successfully:", deletedRecipe);
+    revalidatePath(`/`);
+    // Perform any additional actions or return a response
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    throw error;
+  } finally {
+    redirect("/");
+  }
+};
+
+export const editRecipe = async (recipe: FormData) => {
   const formData = extractFormData(recipe);
-  const ingredientSections = prepareIngredientSections(formData);
+  const ingredientSections = prepareIngredientSections(recipe);
 
   const recipeData: IRecipe = {
     title: formData.title,
@@ -68,7 +112,7 @@ export const editRecipe = async (recipe: any) => {
       ...recipeData,
       ingredientSections: {
         deleteMany: {},
-        create: ingredientSections,
+        updateMany: ingredientSections,
       },
     },
     include: {
@@ -85,13 +129,11 @@ export const editRecipe = async (recipe: any) => {
 };
 
 export async function postRecipe(recipe: FormData) {
-  console.log("Posting recipe");
-  console.log(recipe);
-
   const formData = extractFormData(recipe);
+  console.log("Form data", formData);
+  console.log("-------------------");
   const ingredientSections = prepareIngredientSections(formData);
 
-  console.log("Form data", formData);
   console.log("Ingredient sections", ingredientSections);
 
   const recipeData = {
@@ -111,11 +153,11 @@ export async function postRecipe(recipe: FormData) {
 
   console.log("Recipe data", recipeData);
 
-  // const createdRecipe = await prisma.recipe.create({ data: recipeData });
-  // revalidatePath(`/`);
-  // revalidatePath(`/recipe/${createdRecipe.id}`);
+  const createdRecipe = await prisma.recipe.create({ data: recipeData });
+  revalidatePath(`/`);
+  revalidatePath(`/recipe/${createdRecipe.id}`);
 
-  // redirect(`/recipe/${createdRecipe.id}`);
+  redirect(`/recipe/${createdRecipe.id}`);
 }
 
 export async function searchRecipes(searchTerm: string) {

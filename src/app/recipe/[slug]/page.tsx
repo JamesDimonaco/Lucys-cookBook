@@ -1,20 +1,14 @@
 import prisma from "@/utils/prisma";
 import EditRecipe from "@/components/EditRecipe";
-import { FullRecipeTypeFromPrisma } from "../../../types/recipeTypes";
+import {
+  IRecipe,
+  IIngredientSection,
+  IIngredient,
+} from "../../../types/recipeTypes";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { Recipe } from "@/components/recipe";
-
-export interface IngredientSectionType {
-  title: string;
-  ingredients: IngredientType[];
-}
-
-type IngredientType = {
-  id: string;
-  name: string;
-};
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const fetchData = async () => {
@@ -35,56 +29,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
     return recipe || null;
   };
 
-  const recipeData: FullRecipeTypeFromPrisma | null = await fetchData();
+  const recipeData: IRecipe | null = await fetchData();
   if (!recipeData) notFound();
 
-  const deleteRecipe = async () => {
-    "use server";
-    console.log(params.slug);
-
-    // Fetch the recipe with its related ingredientSections and ingredients
-    const recipe = await prisma.recipe.findUnique({
-      where: {
-        id: params.slug,
-      },
-      include: {
-        ingredientSections: {
-          include: {
-            ingredients: true,
-          },
-        },
-      },
-    });
-
-    // Delete ingredients
-
-    if (!recipe) return <div>Recipe not found</div>;
-
-    for (let section of recipe.ingredientSections) {
-      await prisma.ingredient.deleteMany({
-        where: {
-          ingredientSectionId: section.id,
-        },
-      });
-    }
-
-    // Delete ingredientSections
-    await prisma.ingredientSection.deleteMany({
-      where: {
-        recipeId: recipe.id,
-      },
-    });
-
-    // Now delete the recipe
-    await prisma.recipe.delete({
-      where: {
-        id: recipe.id,
-      },
-    });
-
-    revalidatePath(`/`);
-    redirect("/");
-  };
+  console.log(recipeData);
 
   return <Recipe data={recipeData} />;
 

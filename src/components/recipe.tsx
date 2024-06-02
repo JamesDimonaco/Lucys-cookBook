@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FullRecipeTypeFromPrisma } from "@/types/recipe";
 import parse from "html-react-parser";
 import Image from "next/image";
 import {
@@ -13,8 +12,10 @@ import {
   UsersIcon,
   AwardIcon,
 } from "lucide-react";
+import { IIngredient, IIngredientSection, IRecipe } from "@/types/recipeTypes";
+import { deleteRecipe } from "@/actions";
 
-export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
+export function Recipe({ data }: { data: IRecipe }) {
   return (
     <main className="grid min-h-screen gap-4 p-4 md:gap-8 md:p-6">
       <div className="mx-auto max-w-3xl space-y-4">
@@ -35,7 +36,7 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
               <CalendarIcon className="w-4 h-4" />
               <span className="sr-only">Last updated</span>
               <time dateTime="01-03-2024">
-                {data.updatedAt.toISOString().split("T")[0]}
+                {data.updatedAt && data.updatedAt.toISOString().split("T")[0]}
               </time>
             </div>
             <div className="flex items-center gap-1">
@@ -70,20 +71,24 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
             </p>
           </div>
           <ul className="grid gap-2  list-inside">
-            {data.ingredientSections.map((ingredientSections) => (
-              <li key={ingredientSections.id}>
-                <div>{ingredientSections.title}</div>
-                <ul>
-                  {ingredientSections.ingredients.map((ingredient) => (
-                    <li key={ingredient.id}>
-                      <Checkbox defaultChecked id={ingredient.id}>
-                        {ingredient.name}
-                      </Checkbox>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
+            {data.ingredientSections.map(
+              (ingredientSections: IIngredientSection) => (
+                <li key={ingredientSections.id}>
+                  <div>{ingredientSections.title}</div>
+                  <ul>
+                    {ingredientSections.ingredients.map(
+                      (ingredient: IIngredient) => (
+                        <li key={ingredient.id}>
+                          <Checkbox defaultChecked id={ingredient.id}>
+                            {ingredient.name}
+                          </Checkbox>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </li>
+              )
+            )}
           </ul>
         </div>
         <div className="space-y-4">
@@ -94,72 +99,6 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
             </p>
           </div>
           <div>{parse(data.content ?? "")}</div>
-          {/* <ol className="prose list-decimal list-inside">
-              <li>
-                Preheat the oven to 375°F (190°C). Line a baking sheet with
-                parchment paper or silicone mat.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                In a large bowl, cream together the butter, granulated sugar,
-                and brown sugar until light and fluffy.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Add the vanilla extract and eggs to the butter mixture and beat
-                until well combined.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                In a separate bowl, whisk together the flour, baking soda, and
-                salt.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Gradually add the dry ingredients to the wet ingredients, mixing
-                until just combined.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Fold in the chocolate chips until evenly distributed in the
-                dough.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Drop rounded tablespoons of cookie dough onto the prepared
-                baking sheet, spacing the cookies about 2 inches apart.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Bake the cookies in the preheated oven for 8 to 10 minutes, or
-                until the edges are golden brown and the tops are set.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-              <li>
-                Remove the cookies from the oven and let them cool on the baking
-                sheet for 5 minutes before transferring to a wire rack to cool
-                completely.
-                <Button size="sm" variant="outline">
-                  More Info
-                </Button>
-              </li>
-            </ol> */}
         </div>
         <div className="space-y-4">
           <div className="space-y-2">
@@ -170,6 +109,13 @@ export function Recipe({ data }: { data: FullRecipeTypeFromPrisma }) {
         <div className="flex items-center gap-4">
           <Button className="h-10" variant="outline">
             Edit Recipe
+          </Button>
+          <Button
+            onClick={() => deleteRecipe(data.id)}
+            className="h-10"
+            variant="destructive"
+          >
+            Delete Recipe
           </Button>
           <Button className="h-10">Save to Recipe Box</Button>
         </div>

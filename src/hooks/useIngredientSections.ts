@@ -1,14 +1,25 @@
-import { Ingredient, IngredientSectionType } from "@/types/recipe";
+import { IIngredient, IIngredientSection } from "@/types/recipeTypes";
 import { useState } from "react";
 
 // Define the hook and its return types
 function useIngredientSections() {
   const [ingredientSections, setIngredientSections] = useState<
-    IngredientSectionType[]
-  >([]);
+    IIngredientSection[]
+  >([
+    {
+      id: "1",
+      title: "default section",
+      ingredients: [
+        {
+          id: "1",
+          name: "",
+        },
+      ],
+    },
+  ]);
 
   const addIngredientSection = () => {
-    const newSection: IngredientSectionType = {
+    const newSection: IIngredientSection = {
       id: Date.now().toString(), // For demonstration purposes; use a better ID generator in production
       title: "",
       ingredients: [],
@@ -16,8 +27,16 @@ function useIngredientSections() {
     setIngredientSections([...ingredientSections, newSection]);
   };
 
+  const removeIngredientSection = (sectionId: string) => {
+    if (ingredientSections.length > 1) {
+      setIngredientSections(
+        ingredientSections.filter((section) => section.id !== sectionId)
+      );
+    }
+  };
+
   const addIngredient = (sectionId: string) => {
-    const newIngredient: Ingredient = {
+    const newIngredient: IIngredient = {
       id: Date.now().toString(), // For demonstration purposes; use a better ID generator in production
       name: "",
     };
@@ -81,6 +100,7 @@ function useIngredientSections() {
     removeIngredient,
     updateSectionTitle,
     updateIngredientName,
+    removeIngredientSection,
   };
 }
 
