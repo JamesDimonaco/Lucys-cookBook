@@ -45,6 +45,7 @@ export default function IngredientSection({
           <Input
             name={`ingredientSectionTitle-${sectionIndex}`}
             id={section.id}
+            value={section.title}
             placeholder="Enter section title"
             onChange={(e) => updateSectionTitle(section.id, e.target.value)}
           />

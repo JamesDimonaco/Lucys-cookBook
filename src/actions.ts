@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { IIngredient, IIngredientSection, IRecipe } from "./types/recipeTypes";
 import { getRecipes } from "./functions/recipes";
 import { Prisma } from "@prisma/client";
+import { auth } from "./utils/auth";
 
 function extractFormData(recipe: FormData): Record<string, any> {
   const data: Record<string, any> = {};
@@ -90,9 +91,9 @@ export const deleteRecipe = async (recipeId: string) => {
 
 export const editRecipe = async (recipe: FormData) => {
   const formData = extractFormData(recipe);
-  const ingredientSections = prepareIngredientSections(recipe);
+  const ingredientSections = prepareIngredientSections(formData);
 
-  const recipeData: IRecipe = {
+  const recipeData: Prisma.RecipeUpdateInput = {
     title: formData.title,
     content: formData.content,
     imageUrl: formData.imageUrl || null,
@@ -101,34 +102,79 @@ export const editRecipe = async (recipe: FormData) => {
     notes: formData.notes || null,
     tags: formData.tags ? formData.tags.split(",") : [],
     type: formData.type || "none",
+    makes: parseInt(formData.makes) || null,
     whereFrom: formData.whereFrom || "",
-    ingredientSections: ingredientSections,
-    id: formData.id,
   };
 
-  const updatedRecipe = await prisma.recipe.update({
-    where: { id: formData.id },
-    data: {
-      ...recipeData,
-      ingredientSections: {
-        deleteMany: {},
-        updateMany: ingredientSections,
-      },
-    },
-    include: {
-      ingredientSections: {
-        include: {
-          ingredients: true,
+  console.log("Editing recipe with data:", recipeData);
+
+  try {
+    const originalRecipe = await prisma.recipe.findUnique({
+      where: { id: formData.id },
+      include: {
+        ingredientSections: {
+          include: {
+            ingredients: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  revalidatePath(`/recipes/${updatedRecipe.id}`);
-  return updatedRecipe;
+    if (!originalRecipe) {
+      throw new Error(`Recipe with ID ${formData.id} not found`);
+    }
+
+    await prisma.ingredient.deleteMany({
+      where: {
+        ingredientSection: {
+          recipeId: formData.id,
+        },
+      },
+    });
+
+    const updatedRecipe = await prisma.recipe.update({
+      where: { id: formData.id },
+      data: {
+        ...recipeData,
+        ingredientSections: {
+          deleteMany: {},
+          create: ingredientSections.map((section) => ({
+            title: section.title,
+            ingredients: {
+              create:
+                (section.ingredients?.create as IIngredient[])?.map(
+                  (ingredient: IIngredient) => ({
+                    name: ingredient.name,
+                  })
+                ) || [],
+            },
+          })),
+        },
+      },
+      include: {
+        ingredientSections: {
+          include: {
+            ingredients: true,
+          },
+        },
+      },
+    });
+
+    revalidatePath(`/recipe/${formData.id}`);
+    return updatedRecipe;
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    throw error;
+  } finally {
+    redirect(`/recipe/${formData.id}`);
+  }
 };
 
 export async function postRecipe(recipe: FormData) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("You must be logged in to create a recipe.");
+  }
   const formData = extractFormData(recipe);
   console.log("Form data", formData);
   console.log("-------------------");
@@ -149,6 +195,7 @@ export async function postRecipe(recipe: FormData) {
     ingredientSections: {
       create: ingredientSections,
     },
+    authorId: session.user.id,
   };
 
   console.log("Recipe data", recipeData);

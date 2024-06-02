@@ -117,8 +117,8 @@ export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>
-              <Select defaultValue={recipe?.type || "none"}>
-                <SelectTrigger name="type" id="type">
+              <Select name="type" defaultValue={recipe?.type || "none"}>
+                <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent position="popper">
@@ -133,9 +133,9 @@ export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
             <div className="space-y-2">
               <Label htmlFor="makes">Servings</Label>
               <Input
-                name="servings"
+                name="makes"
                 type="number"
-                id="servings"
+                id="makes"
                 placeholder="Enter number of servings"
                 defaultValue={recipe?.makes || ""}
               />
@@ -143,7 +143,7 @@ export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="where-from">Source</Label>
               <Input
-                name="source"
+                name="whereFrom"
                 id="where-from"
                 placeholder="Enter source"
                 defaultValue={recipe?.whereFrom || ""}
