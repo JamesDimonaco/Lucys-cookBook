@@ -1,5 +1,5 @@
 import { postRecipe } from "@/actions";
-import NewRecipeForm from "@/components/ui/form/Form";
+import RecipeForm from "@/components/ui/form/Form";
 
 export default async function Recipes() {
   // const testAI = await fetch("http://localhost:3000/api/upload-recipe", {
@@ -20,7 +20,7 @@ export default async function Recipes() {
   return (
     <main className="">
       {/* <Form defaultFromState={defaultFromState} post={postRecipe} /> */}
-      <NewRecipeForm uploadRecipe={postRecipe} />
+      <RecipeForm submitAction={postRecipe} />
     </main>
   );
 }

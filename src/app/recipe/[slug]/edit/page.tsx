@@ -1,9 +1,11 @@
 import prisma from "@/utils/prisma";
+import RecipeForm from "@/components/ui/form/Form";
 import { IRecipe, IIngredientSection, IIngredient } from "@/types/recipeTypes";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { Recipe } from "@/components/recipe";
+import { editRecipe } from "@/actions";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const fetchData = async () => {
@@ -27,5 +29,5 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const recipeData: IRecipe | null = await fetchData();
   if (!recipeData) notFound();
 
-  return <Recipe data={recipeData} />;
+  return <RecipeForm recipe={recipeData} submitAction={editRecipe} />;
 }

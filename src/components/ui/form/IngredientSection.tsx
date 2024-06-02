@@ -1,11 +1,19 @@
-import { IIngredient } from "@/types/recipeTypes";
+import { IIngredient, IIngredientSection } from "@/types/recipeTypes";
 import { Input } from "../input";
 import { Label } from "../label";
 import useIngredientSections from "@/hooks/useIngredientSections";
 import { Button } from "../button";
 import { FaTrash } from "react-icons/fa";
 
-export default function IngredientSection() {
+interface IngredientSectionProps {
+  initialData?: IIngredientSection[];
+}
+
+export default function IngredientSection({
+  initialData,
+}: IngredientSectionProps) {
+  console.log("initialData", initialData);
+
   const {
     ingredientSections,
     addIngredientSection,
@@ -14,7 +22,7 @@ export default function IngredientSection() {
     updateSectionTitle,
     updateIngredientName,
     removeIngredientSection,
-  } = useIngredientSections();
+  } = useIngredientSections(initialData);
 
   return (
     <>

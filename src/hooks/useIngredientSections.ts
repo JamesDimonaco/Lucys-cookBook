@@ -2,21 +2,23 @@ import { IIngredient, IIngredientSection } from "@/types/recipeTypes";
 import { useState } from "react";
 
 // Define the hook and its return types
-function useIngredientSections() {
+function useIngredientSections(initialData?: IIngredientSection[]) {
   const [ingredientSections, setIngredientSections] = useState<
     IIngredientSection[]
-  >([
-    {
-      id: "1",
-      title: "default section",
-      ingredients: [
-        {
-          id: "1",
-          name: "",
-        },
-      ],
-    },
-  ]);
+  >(
+    initialData ?? [
+      {
+        id: "1",
+        title: "default section",
+        ingredients: [
+          {
+            id: "1",
+            name: "",
+          },
+        ],
+      },
+    ]
+  );
 
   const addIngredientSection = () => {
     const newSection: IIngredientSection = {

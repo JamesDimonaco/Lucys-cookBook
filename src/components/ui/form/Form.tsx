@@ -18,45 +18,51 @@ import {
   Select,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import useIngredientSections from "@/hooks/useIngredientSections";
-import { IIngredient } from "@/types/recipeTypes";
+import { IRecipe } from "@/types/recipeTypes";
 import IngredientSection from "./IngredientSection";
+import RichEditor from "./editor/RichEditor";
 
-export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
-  const {
-    ingredientSections,
-    addIngredientSection,
-    addIngredient,
-    removeIngredient,
-    updateSectionTitle,
-    updateIngredientName,
-  } = useIngredientSections();
+type SubmitAction = (formData: FormData) => void;
+
+interface RecipeFormProps {
+  recipe?: IRecipe | null;
+  submitAction: SubmitAction;
+}
+
+export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
+  const isEditMode = !!recipe;
+
+  console.log(isEditMode, recipe);
 
   return (
     <div className="w-full">
       <Card className="p-4 md:p-6 lg:p-8 w-full">
         <CardHeader>
-          <CardTitle>Recipe Upload</CardTitle>
+          <CardTitle>{isEditMode ? "Edit Recipe" : "Create Recipe"}</CardTitle>
           <CardDescription>
-            Fill out the form below to upload your recipe.
+            {isEditMode
+              ? "Update the recipe details below."
+              : "Fill out the form below to create a new recipe."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form
-            action={uploadRecipe}
-            className=" grid grid-cols-1 md:grid-cols-2 gap-4"
+            action={submitAction}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
+            {isEditMode && <input type="hidden" name="id" value={recipe?.id} />}
             <div className="space-y-2 col-span-2">
               <Label htmlFor="title">Title</Label>
-              <Input name="title" id="title" placeholder="Enter recipe title" />
-            </div>
-            <div className="space-y-2 col-span-1 md:col-span-2">
-              <Label htmlFor="content">Method</Label>
-              <Textarea
-                name="content"
-                id="content"
-                placeholder="Enter recipe content"
+              <Input
+                name="title"
+                id="title"
+                placeholder="Enter recipe title"
+                defaultValue={recipe?.title}
               />
+            </div>
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="content">Method</Label>
+              <RichEditor content={recipe?.content ?? ""} />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="image-url">Image URL</Label>
@@ -64,11 +70,12 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
                 name="image-url"
                 id="image-url"
                 placeholder="Enter image URL"
+                defaultValue={recipe?.imageUrl ?? ""}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
-              <Select>
+              <Select defaultValue={recipe?.difficulty || "none"}>
                 <SelectTrigger name="difficulty" id="difficulty">
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
@@ -86,82 +93,31 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
                 type="number"
                 id="duration"
                 placeholder="Enter duration in minutes"
+                defaultValue={recipe?.duration || ""}
               />
             </div>
-            <IngredientSection />
-            {/* {ingredientSections.map((section) => (
-              <div
-                key={section.id}
-                className="space-y-2 col-span-1 md:col-span-2"
-              >
-                <Label htmlFor={section.id}>{section.title}</Label>
-                <Input
-                  id={section.id}
-                  placeholder="Enter section title"
-                  onChange={(e) =>
-                    updateSectionTitle(section.id, e.target.value)
-                  }
-                />
-                {section.ingredients.map((ingredient: IIngredient) => (
-                  <div
-                    key={ingredient.id}
-                    className="flex items-center space-x-2"
-                  >
-                    <Input
-                      placeholder="Enter ingredient"
-                      value={ingredient.name}
-                      onChange={(e) =>
-                        updateIngredientName(
-                          section.id,
-                          ingredient.id,
-                          e.target.value
-                        )
-                      }
-                    />
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        removeIngredient(section.id, ingredient.id);
-                      }}
-                      variant="destructive"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addIngredient(section.id);
-                  }}
-                  className="w-full"
-                >
-                  Add Ingredient
-                </Button>
-              </div>
-            ))}
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                addIngredientSection();
-              }}
-              variant="outline"
-              className="w-full col-span-1 md:col-span-2"
-            >
-              Add Ingredient Section
-            </Button> */}
-
+            <IngredientSection initialData={recipe?.ingredientSections || []} />
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="notes">Notes</Label>
-              <Textarea name="notes" id="notes" placeholder="Enter notes" />
+              <Textarea
+                name="notes"
+                id="notes"
+                placeholder="Enter notes"
+                defaultValue={recipe?.notes || ""}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="tags">Tags</Label>
-              <Input name="tags" id="tags" placeholder="Enter tags" />
+              <Input
+                name="tags"
+                id="tags"
+                placeholder="Enter tags"
+                defaultValue={recipe?.tags?.join(", ") || ""}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>
-              <Select>
+              <Select defaultValue={recipe?.type || "none"}>
                 <SelectTrigger name="type" id="type">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
@@ -181,15 +137,21 @@ export default function NewRecipeForm({ uploadRecipe }: { uploadRecipe: any }) {
                 type="number"
                 id="servings"
                 placeholder="Enter number of servings"
+                defaultValue={recipe?.makes || ""}
               />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="where-from">Source</Label>
-              <Input name="source" id="where-from" placeholder="Enter source" />
+              <Input
+                name="source"
+                id="where-from"
+                placeholder="Enter source"
+                defaultValue={recipe?.whereFrom || ""}
+              />
             </div>
             <CardFooter className="col-span-2">
               <Button className="w-full" type="submit">
-                Upload Recipe
+                {isEditMode ? "Update Recipe" : "Create Recipe"}
               </Button>
             </CardFooter>
           </form>

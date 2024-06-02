@@ -107,9 +107,11 @@ export function Recipe({ data }: { data: IRecipe }) {
           <span className="prose">{data.notes}</span>
         </div>
         <div className="flex items-center gap-4">
-          <Button className="h-10" variant="outline">
-            Edit Recipe
-          </Button>
+          <Link href={`/recipe/${data.id}/edit`}>
+            <Button className="h-10" variant="outline">
+              Edit Recipe
+            </Button>
+          </Link>
           <Button
             onClick={() => deleteRecipe(data.id)}
             className="h-10"
