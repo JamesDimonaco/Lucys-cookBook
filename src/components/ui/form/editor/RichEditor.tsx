@@ -5,7 +5,6 @@ import Highlight from "@tiptap/extension-highlight";
 import TextStyle from "@tiptap/extension-text-style";
 
 import TaskItem from "@tiptap/extension-task-item";
-import CharacterCount from "@tiptap/extension-character-count";
 import MenuBar from "./MenuBar";
 
 interface RichEditorProps {
@@ -36,9 +35,6 @@ const RichEditor: React.FC<RichEditorProps> = ({ content }) => {
     TextStyle,
     Highlight,
     TaskItem,
-    CharacterCount.configure({
-      limit: 10000,
-    }),
   ];
   return (
     <EditorProvider
