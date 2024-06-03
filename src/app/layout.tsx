@@ -1,7 +1,8 @@
-import Header from "../components/Header";
 import "@/styles/globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
 
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { cn } from "@/utils/tw-merge";
 import { Sidebar } from "@/components/sidebar";
 
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <main className="grid gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
           <div className="sticky top-0 h-screen">
             <Sidebar />

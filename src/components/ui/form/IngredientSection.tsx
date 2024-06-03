@@ -12,8 +12,6 @@ interface IngredientSectionProps {
 export default function IngredientSection({
   initialData,
 }: IngredientSectionProps) {
-  console.log("initialData", initialData);
-
   const {
     ingredientSections,
     addIngredientSection,

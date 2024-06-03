@@ -238,21 +238,7 @@ function RecipeForm({
         </div>
 
         <label className=" text-primary font-bold ">Instructions:</label>
-        <div>
-          <ReactQuill
-            className=" text-black bg-secondary"
-            theme="snow"
-            value={formState.content || ""}
-            onChange={(value, delta, source, editor) => {
-              console.log({ value, delta, source, editor });
 
-              setFormState({
-                ...formState,
-                content: value.toString(),
-              });
-            }}
-          />{" "}
-        </div>
         <input
           className="bg-secondary text-black font-normal "
           type="hidden"

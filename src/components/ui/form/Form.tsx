@@ -20,25 +20,57 @@ import {
 import { Button } from "@/components/ui/button";
 import { IRecipe } from "@/types/recipeTypes";
 import IngredientSection from "./IngredientSection";
-import RichEditor from "./editor/RichEditor";
+import UploadButton from "@/components/UploadButton";
+import { useState } from "react";
+import RichTextInput from "./editor/RichTextInput";
 
 type SubmitAction = (formData: FormData) => void;
 
 interface RecipeFormProps {
-  recipe?: IRecipe | null;
+  initalRecipe?: IRecipe;
   submitAction: SubmitAction;
 }
 
-export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
-  const isEditMode = !!recipe;
+export default function RecipeForm({
+  initalRecipe,
+  submitAction,
+}: RecipeFormProps) {
+  const isEditMode = !!initalRecipe;
+  const [recipe, setRecipe] = useState<IRecipe | undefined>(initalRecipe);
+  const [loading, setLoading] = useState(false);
 
-  console.log(isEditMode, recipe);
+  const uploadImage = async (imageUrl: string) => {
+    setLoading(true);
+    try {
+      console.log("Image URL: ", imageUrl);
+      const response = await fetch("http://localhost:3000/api/upload-recipe", {
+        method: "POST",
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: imageUrl,
+        }),
+      });
+      const data = await response.json();
+      setRecipe(data.finalResult);
+      console.log("Data: ", data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log("Recipe: ", recipe);
 
   return (
     <div className="w-full">
       <Card className="p-4 md:p-6 lg:p-8 w-full">
         <CardHeader>
           <CardTitle>{isEditMode ? "Edit Recipe" : "Create Recipe"}</CardTitle>
+          <UploadButton onSubmit={uploadImage} />
           <CardDescription>
             {isEditMode
               ? "Update the recipe details below."
@@ -62,7 +94,16 @@ export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
             </div>
             <div className="space-y-2 col-span-2">
               <Label htmlFor="content">Method</Label>
-              <RichEditor content={recipe?.content ?? ""} />
+              <RichTextInput
+                name="content"
+                content={recipe?.content ?? ""}
+                onChange={(newContent) =>
+                  setRecipe((prevRecipe) => ({
+                    ...prevRecipe!,
+                    content: newContent,
+                  }))
+                }
+              />
             </div>
             <div className="space-y-2 col-span-1 md:col-span-2">
               <Label htmlFor="image-url">Image URL</Label>
@@ -75,9 +116,16 @@ export default function RecipeForm({ recipe, submitAction }: RecipeFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
-              <Select defaultValue={recipe?.difficulty || "none"}>
-                <SelectTrigger name="difficulty" id="difficulty">
-                  <SelectValue placeholder="Select difficulty" />
+              <Select defaultValue={recipe?.difficulty || ""}>
+                <SelectTrigger
+                  defaultValue={recipe?.difficulty || ""}
+                  name="difficulty"
+                  id="difficulty"
+                >
+                  <SelectValue
+                    defaultValue={recipe?.difficulty || ""}
+                    placeholder="Select difficulty"
+                  />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   <SelectItem value="easy">Easy</SelectItem>

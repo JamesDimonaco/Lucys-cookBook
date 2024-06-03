@@ -106,8 +106,6 @@ export const editRecipe = async (recipe: FormData) => {
     whereFrom: formData.whereFrom || "",
   };
 
-  console.log("Editing recipe with data:", recipeData);
-
   try {
     const originalRecipe = await prisma.recipe.findUnique({
       where: { id: formData.id },

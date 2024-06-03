@@ -29,5 +29,5 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const recipeData: IRecipe | null = await fetchData();
   if (!recipeData) notFound();
 
-  return <RecipeForm recipe={recipeData} submitAction={editRecipe} />;
+  return <RecipeForm initalRecipe={recipeData} submitAction={editRecipe} />;
 }

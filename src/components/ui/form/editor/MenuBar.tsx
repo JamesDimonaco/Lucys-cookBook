@@ -1,9 +1,12 @@
 import React, { Fragment } from "react";
 import MenuItem, { MenuItemProps } from "./MenuItem";
-import { useCurrentEditor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 
-const EditorMenu: React.FC = () => {
-  const { editor } = useCurrentEditor();
+interface MenuBarProps {
+  editor: Editor | null;
+}
+
+const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
   if (!editor) {
     return null;
   }
@@ -96,4 +99,4 @@ const EditorMenu: React.FC = () => {
   );
 };
 
-export default EditorMenu;
+export default MenuBar;
