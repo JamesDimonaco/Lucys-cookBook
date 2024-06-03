@@ -1,26 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import RecipeCard from "./recipeCard";
-import { Recipe } from "@prisma/client";
 import { useInView } from "react-intersection-observer";
 import { fetchPecipes } from "@/actions";
+import { IRecipe } from "@/types/recipeTypes";
 
 export default function InfiniteScrollRecipes({
-  initalRecipes,
+  initiallRecipes,
   search,
 }: {
-  initalRecipes: Recipe[];
+  initiallRecipes: IRecipe[];
   search: string;
 }) {
-  const [recipes, setRecipes] = useState<Recipe[]>(initalRecipes);
+  console.log("Initial Recipes", initiallRecipes);
+
+  const [recipes, setRecipes] = useState<IRecipe[]>(initiallRecipes);
   const [skip, setSkip] = useState(10);
   const [ref, inView] = useInView();
 
   async function fetchMoreRecipes() {
     const newRecipes = await fetchPecipes({ limit: 10, skip, search });
     setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
-    setSkip(skip + 10);
+    setSkip((prevSkip) => prevSkip + 10);
   }
 
   useEffect(() => {
@@ -28,6 +30,12 @@ export default function InfiniteScrollRecipes({
       fetchMoreRecipes();
     }
   }, [inView]);
+
+  useEffect(() => {
+    setRecipes(initiallRecipes);
+  }, [initiallRecipes]);
+
+  console.log("Recipes", recipes);
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

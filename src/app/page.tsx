@@ -15,11 +15,6 @@ type HomeProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 export default async function Home({ params, searchParams }: HomeProps) {
-  // const limit = searchParams.limit
-  //   ? parseInt(searchParams.limit as string)
-  //   : 20;
-  // const skip = searchParams.skip ? parseInt(searchParams.skip as string) : 0;
-
   const search = searchParams.search ? (searchParams.search as string) : "";
   const session = await auth();
 
@@ -40,7 +35,7 @@ export default async function Home({ params, searchParams }: HomeProps) {
           </Link>
         )}
       </div>
-      <InfiniteScrollRecipes initalRecipes={recipes} search={search} />
+      <InfiniteScrollRecipes initiallRecipes={recipes} search={search} />
     </main>
   );
 }

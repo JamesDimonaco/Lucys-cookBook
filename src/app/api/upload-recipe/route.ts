@@ -14,7 +14,7 @@ export async function POST(req: Request, res: Response) {
           content: [
             {
               type: "text",
-              text: "this is a recipe, need you to return to me the title, ingredients, instructions, cook-time, difficuly, servings",
+              text: "this is a recipe, need you to return to me the title, ingredients, instructions, cook-time, difficuly, servings, notes, source and type",
             },
             {
               type: "image",
@@ -37,7 +37,9 @@ export async function POST(req: Request, res: Response) {
         ),
         content: z
           .string()
-          .describe("html rich text instructions method steps"),
+          .describe(
+            "html rich text instructions method steps, create a new html line inbetween each step"
+          ),
         duration: z.number().describe("cook-time in minutes"),
         difficulty: z.enum(["easy", "medium", "hard"]),
         type: z.enum(["breakfast", "lunch", "dinner", "dessert"]),

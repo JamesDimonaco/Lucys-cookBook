@@ -1,4 +1,3 @@
-import { RecipeType } from "@/types/recipe";
 import prisma from "@/utils/prisma";
 
 export const getRecipeData = async (id: string) => {
@@ -27,6 +26,7 @@ export const getRecipes = async ({
   search?: string;
 }) => {
   try {
+
     const recipes = await prisma.recipe.findMany({
       take: limit,
       skip: skip,
@@ -41,6 +41,7 @@ export const getRecipes = async ({
           }
         : {},
     });
+
     return { recipes: JSON.parse(JSON.stringify(recipes)) };
   } catch (error) {
     console.error("Error fetching recipes:", error);
