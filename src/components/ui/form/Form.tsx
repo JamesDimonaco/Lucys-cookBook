@@ -40,10 +40,13 @@ export default function RecipeForm({
   const [loading, setLoading] = useState(false);
 
   const uploadImage = async (imageUrl: string) => {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
     setLoading(true);
     try {
       console.log("Image URL: ", imageUrl);
-      const response = await fetch("http://localhost:3000/api/upload-recipe", {
+      const response = await fetch(`${baseUrl}/api/upload-recipe`, {
         method: "POST",
         cache: "no-cache",
         headers: {
