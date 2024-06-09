@@ -7,18 +7,26 @@ import { UploadButton } from "../utils/uploadthing";
 
 interface ButtonProps {
   onSubmit: (imageUrl: string) => void;
+  setStatus: (status: string) => void;
+  setLoading: (loading: boolean) => void;
 }
 
-export default function Button({ onSubmit }: ButtonProps) {
+export default function Button({
+  setLoading,
+  onSubmit,
+  setStatus,
+}: ButtonProps) {
   return (
     <main className="flex flex-col items-center justify-between ">
       <UploadButton
+        onUploadBegin={() => {
+          setLoading(true);
+          setStatus("Uploading image...");
+        }}
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           if (!res) return;
           onSubmit(res[0].url);
-          console.log("Files: ", res);
-          alert("Upload Completed");
         }}
         onUploadError={(error: Error) => {
           alert(`ERROR! ${error.message}`);

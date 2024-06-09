@@ -38,7 +38,7 @@ export async function POST(req: Request, res: Response) {
         content: z
           .string()
           .describe(
-            "html rich text instructions method steps, create a new html line inbetween each step"
+            "html rich text instructions method steps, use ordered lists create a 2 new html line inbetween each step Add title when nessery for new sections of instructions, Bolid Italics and highlights if needed "
           ),
         duration: z.number().describe("cook-time in minutes"),
         difficulty: z.enum(["easy", "medium", "hard"]),
