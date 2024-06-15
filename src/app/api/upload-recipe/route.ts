@@ -1,7 +1,7 @@
 export async function POST(req: Request, res: Response) {
   const { url } = await req.json();
 
-  const backendUrl = process.env.BACKEND_API_URL || "http://localhost:4000";
+  const backendUrl = process.env.BACKEND_API_URL || "http://localhost:3232";
   try {
     const previewRecipe = await fetch(`${backendUrl}/create_recipe_preview`, {
       method: "POST",
