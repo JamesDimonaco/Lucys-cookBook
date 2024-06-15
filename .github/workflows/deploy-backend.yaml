@@ -11,6 +11,10 @@ jobs:
         run: pwd
       - name: ls
         run: ls
+      - name: cd
+        run: cd backend
+      - name: pwd
+        run: pwd
 
       - name: Checkout
         uses: actions/checkout@v2
