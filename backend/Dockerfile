@@ -8,8 +8,6 @@ WORKDIR /usr/src/app
 
 # Copy the entire current directory into the container
 COPY . .
-# Copy the .env file into the container
-COPY .env .env
 
 # Build the Rust application with optimizations
 RUN rustup default stable
