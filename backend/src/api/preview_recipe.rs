@@ -11,7 +11,7 @@ pub async fn create_new_preview_recipe(
 ) -> impl Responder {
     let image_url = &request.image_url;
 
-    println!("Getting recipe from image: {:?}");
+    println!("Creating new preview recipe");
 
     // Call OpenAI to process the image and get the recipe content
     match call_openai(image_url).await {
