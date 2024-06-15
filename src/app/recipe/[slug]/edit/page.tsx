@@ -6,8 +6,10 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { Recipe } from "@/components/recipe";
 import { editRecipe } from "@/actions";
+import { auth } from "@/utils/auth";
 
 export default async function Page({ params }: { params: { slug: string } }) {
+  const session = await auth();
   const fetchData = async () => {
     const recipe = await prisma.recipe.findUnique({
       where: {

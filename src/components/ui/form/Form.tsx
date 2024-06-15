@@ -31,7 +31,7 @@ type SubmitAction = (formData: FormData) => void;
 interface RecipeFormProps {
   initalRecipe?: IRecipe;
   submitAction: SubmitAction;
-  userID: string;
+  userID?: string;
 }
 
 export default function RecipeForm({
