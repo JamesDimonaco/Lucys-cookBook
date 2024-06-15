@@ -11,18 +11,14 @@ pub async fn create_new_preview_recipe(
 ) -> impl Responder {
     let image_url = &request.image_url;
 
-    println!("Processing image: {:?}", image_url);
+    println!("Getting recipe from image: {:?}");
 
     // Call OpenAI to process the image and get the recipe content
     match call_openai(image_url).await {
         Ok(openai_response) => {
-            println!("OpenAI response: {:?}", openai_response);
-
             // Create a new recipe response from OpenAI response
             let recipe = create_recipe_from_openai_response(openai_response);
-            println!("Recipe: {:?}", recipe);
 
-            // Assuming saving the recipe to the database might go here
             // let repo_result = repo.save_recipe(recipe.clone()).await;
 
             HttpResponse::Ok().json(recipe)

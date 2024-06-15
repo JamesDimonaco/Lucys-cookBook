@@ -24,17 +24,20 @@ import UploadButton from "@/components/UploadButton";
 import { useState } from "react";
 import RichTextInput from "./editor/RichTextInput";
 import Loading from "@/components/ui/form/Loading";
+import { CREATE_RECIPE_REVIEW } from "@/app/api/recipe_review";
 
 type SubmitAction = (formData: FormData) => void;
 
 interface RecipeFormProps {
   initalRecipe?: IRecipe;
   submitAction: SubmitAction;
+  userID: string;
 }
 
 export default function RecipeForm({
   initalRecipe,
   submitAction,
+  userID,
 }: RecipeFormProps) {
   const isEditMode = !!initalRecipe;
   const [recipe, setRecipe] = useState<IRecipe | undefined>(initalRecipe);
@@ -42,24 +45,15 @@ export default function RecipeForm({
   const [status, setStatus] = useState("");
 
   const uploadImage = async (imageUrl: string) => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
-
+    if (!userID) {
+      console.error("User not found");
+      return;
+    }
     setLoading(true);
     try {
       setStatus("Generating recipe...");
 
-      const response = await fetch(`${baseUrl}/api/upload-recipe`, {
-        method: "POST",
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: imageUrl,
-        }),
-      });
-      const data = await response.json();
+      const data = await CREATE_RECIPE_REVIEW(imageUrl, userID);
       setRecipe(data);
     } catch (error) {
       console.error("Error uploading image:", error);

@@ -117,7 +117,7 @@ export default function Loading({ status }: LoadingProps) {
       setProgress((prevProgress) =>
         prevProgress >= 100 ? 100 : prevProgress + 1
       );
-    }, 400);
+    }, 250);
 
     if (status === "Done!") {
       clearInterval(timer);

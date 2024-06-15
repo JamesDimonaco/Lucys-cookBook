@@ -1,20 +1,23 @@
-export async function POST(req: Request, res: Response) {
-  const { url } = await req.json();
+export async function CREATE_RECIPE_REVIEW(image_url: string, user_id: string) {
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:3232";
 
-  const backendUrl = process.env.BACKEND_API_URL || "http://localhost:3232";
   try {
     const previewRecipe = await fetch(`${backendUrl}/create_recipe_preview`, {
       method: "POST",
+      cache: "no-cache",
+      next: { revalidate: 1 }, // Add this line
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        image_url: url,
-        user_id: "67e55044-10b1-426f-9247-bb680e5fe0c8",
+        image_url,
+        user_id,
       }),
     });
 
     const previewRecipeJson = await previewRecipe.json();
+
     const modifiedPreviewRecipeJson = {
       ...previewRecipeJson,
       whereFrom: previewRecipeJson.where_from,
@@ -22,9 +25,7 @@ export async function POST(req: Request, res: Response) {
       type: previewRecipeJson.type_,
     };
 
-    return new Response(JSON.stringify(modifiedPreviewRecipeJson), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return modifiedPreviewRecipeJson;
   } catch (error) {
     console.error("Error: ", error);
 

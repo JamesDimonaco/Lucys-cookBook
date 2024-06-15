@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpServer, middleware::Logger};
+use actix_cors::Cors;
 use std::sync::Arc;
 use repository::postgres::PostgresRepository;
 use dotenv;
@@ -33,11 +34,17 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
+
+    
     let server = HttpServer::new(move || {
         let logger = Logger::default();
         let postgres_data = web::Data::new(repository.clone());
-
-        App::new()
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header();
+            App::new()
+            .wrap(cors)
             .app_data(postgres_data)
             .route("/create_recipe_preview", web::post().to(create_new_preview_recipe))
             .route("/recipes", web::get().to(api::recipe::get_all_recipes))
@@ -45,6 +52,7 @@ async fn main() -> std::io::Result<()> {
     });
 
     println!("Attempting to bind to port");
+
 
     match server.bind(("0.0.0.0", 3232)) {
         Ok(srv) => {
@@ -57,7 +65,6 @@ async fn main() -> std::io::Result<()> {
             return Err(std::io::Error::new(std::io::ErrorKind::AddrInUse, "Address already in use"));
         }
     };
-
 
     
     Ok(())

@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PreviewRecipeRequest {
     pub image_url: String,
-    pub user_id: Uuid,
+    pub user_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
