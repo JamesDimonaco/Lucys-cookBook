@@ -81,7 +81,7 @@ pub fn create_recipe_from_openai_response(openai_response: Value) -> PreviewReci
         makes: parsed_content["makes"].as_i64().map(|m| m as i32),
         description: None, // Adjust if description is provided in the response
         where_from: Some(parsed_content["whereFrom"].as_str().unwrap_or("").to_string()),
-        ingredient_sections,
+        ingredient_sections
     };
 
     // Handling type_ field separately to ensure it's Option<String>

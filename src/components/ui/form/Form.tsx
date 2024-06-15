@@ -60,7 +60,7 @@ export default function RecipeForm({
         }),
       });
       const data = await response.json();
-      setRecipe(data.finalResult);
+      setRecipe(data);
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
