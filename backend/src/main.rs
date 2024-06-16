@@ -39,11 +39,15 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         let logger = Logger::default();
         let postgres_data = web::Data::new(repository.clone());
-        let cors = Cors::default()
-            .allow_any_origin()
-            .allow_any_method()
-            .allow_any_header();
-            App::new()
+
+        let cors = Cors::default().allowed_origin_fn(|origin, _| {
+            dotenv::var("ENV").unwrap_or_else(|_| "production".to_string()) == "development"
+                && origin == "http://localhost:3000"
+            }).allowed_origin("https://lucys-cook-book.vercel.app")
+            .allowed_origin("https://recipes.dimonaco.co.uk")
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
+            .allowed_headers(vec!["Content-Type", "Authorization"]);
+        App::new()
             .wrap(cors)
             .app_data(postgres_data)
             .route("/create_recipe_preview", web::post().to(create_new_preview_recipe))
