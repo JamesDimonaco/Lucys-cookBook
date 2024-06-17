@@ -1,11 +1,13 @@
 import NextAuth, { type Session, User } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [GitHub],
+  providers: [GitHub, Google],
 });
 const baseUrl = process.env.BASE_URL || "http://localhost:3000";
 
