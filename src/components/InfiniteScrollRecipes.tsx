@@ -13,8 +13,6 @@ export default function InfiniteScrollRecipes({
   initiallRecipes: IRecipe[];
   search: string;
 }) {
-  console.log("Initial Recipes", initiallRecipes);
-
   const [recipes, setRecipes] = useState<IRecipe[]>(initiallRecipes);
   const [skip, setSkip] = useState(10);
   const [ref, inView] = useInView();
@@ -34,8 +32,6 @@ export default function InfiniteScrollRecipes({
   useEffect(() => {
     setRecipes(initiallRecipes);
   }, [initiallRecipes]);
-
-  console.log("Recipes", recipes);
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

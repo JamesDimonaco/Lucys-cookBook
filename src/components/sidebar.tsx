@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { signOut } from "@/utils/auth";
 import {
   BookOpenIcon,
   SearchIcon,
@@ -44,9 +44,16 @@ export async function Sidebar() {
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link href="/api/auth/signout">
-                <DropdownMenuItem>Sign Out</DropdownMenuItem>
-              </Link>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <button type="submit">
+                  <DropdownMenuItem>Sign Out</DropdownMenuItem>
+                </button>
+              </form>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
