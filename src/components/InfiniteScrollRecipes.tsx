@@ -9,16 +9,23 @@ import { IRecipe } from "@/types/recipeTypes";
 export default function InfiniteScrollRecipes({
   initiallRecipes,
   search,
+  userId,
 }: {
   initiallRecipes: IRecipe[];
-  search: string;
+  search?: string;
+  userId?: string;
 }) {
   const [recipes, setRecipes] = useState<IRecipe[]>(initiallRecipes);
   const [skip, setSkip] = useState(10);
   const [ref, inView] = useInView();
 
   async function fetchMoreRecipes() {
-    const newRecipes = await fetchPecipes({ limit: 10, skip, search });
+    const newRecipes = await fetchPecipes({
+      limit: 10,
+      skip,
+      search,
+      authorId: userId,
+    });
     setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
     setSkip((prevSkip) => prevSkip + 10);
   }

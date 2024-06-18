@@ -1,10 +1,12 @@
 import { getSession } from "@/utils/auth";
-import Prisma from "@/utils/prisma";
+import prisma from "@/utils/prisma";
 
 export const getUser = async () => {
   const { sessionUser } = await getSession();
 
-  const user = await Prisma.user.findUnique({
+  if (!sessionUser) return null;
+
+  const user = await prisma.user.findUnique({
     where: {
       id: sessionUser.id,
     },
@@ -19,22 +21,26 @@ export const getUser = async () => {
   return user;
 };
 
-export const getUserRecipes = async () => {
-  const { sessionUser } = await getSession();
-
-  const recipes = await Prisma.recipe.findMany({
+export const getUserById = async (userId: string) => {
+  const user = await prisma.user.findUnique({
     where: {
-      authorId: sessionUser.id,
+      id: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
     },
   });
-
-  return recipes;
+  return user;
 };
 
 export const getUserRecipe = async (recipeId: string) => {
   const { sessionUser } = await getSession();
+  if (!sessionUser) return null;
 
-  const recipe = await Prisma.recipe.findUnique({
+  const recipe = await prisma.recipe.findUnique({
     where: {
       id: recipeId,
       authorId: sessionUser.id,

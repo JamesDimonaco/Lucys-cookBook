@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/utils/auth";
+import { getSession, signOut } from "@/utils/auth";
 import {
   BookOpenIcon,
   SearchIcon,
@@ -21,9 +21,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export async function Sidebar() {
-  const session = await auth();
+  const { sessionUser } = await getSession();
 
-  const userImage = session?.user?.image || "";
+  const userImage = sessionUser?.image || "";
 
   return (
     <div className="flex h-full flex-col gap-2 col-span-1">
@@ -32,7 +32,7 @@ export async function Sidebar() {
           <BookOpenIcon className="h-6 w-6" />
           <span className="">Recipes</span>
         </Link>
-        {session ? (
+        {sessionUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-9 w-9">
@@ -63,13 +63,15 @@ export async function Sidebar() {
         )}
       </div>
       <div className="space-y-1 py-4  lg:block">
-        <Link
-          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          href="#"
-        >
-          <LaptopIcon className="text-gray-500" />
-          <span className="ml-3">My Recipes</span>
-        </Link>
+        {sessionUser && (
+          <Link
+            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            href={`/${sessionUser.id}`}
+          >
+            <LaptopIcon className="text-gray-500" />
+            <span className="ml-3">My Recipes</span>
+          </Link>
+        )}
         <Link
           className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
           href="#"

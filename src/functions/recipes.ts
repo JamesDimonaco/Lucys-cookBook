@@ -20,26 +20,30 @@ export const getRecipes = async ({
   limit = 10,
   skip = 0,
   search,
+  authorId,
 }: {
   limit: number;
   skip: number;
   search?: string;
+  authorId?: string;
 }) => {
   try {
-
     const recipes = await prisma.recipe.findMany({
       take: limit,
       skip: skip,
-      where: search
-        ? {
-            OR: [
-              { title: { contains: search } },
-              { content: { contains: search } },
-              { description: { contains: search } },
-              { tags: { hasSome: [search] } },
-            ],
-          }
-        : {},
+      where: {
+        authorId: authorId ?? undefined,
+        ...(search
+          ? {
+              OR: [
+                { title: { contains: search } },
+                { content: { contains: search } },
+                { description: { contains: search } },
+                { tags: { hasSome: [search] } },
+              ],
+            }
+          : {}),
+      },
     });
 
     return { recipes: JSON.parse(JSON.stringify(recipes)) };

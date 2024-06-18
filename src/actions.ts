@@ -236,13 +236,15 @@ export async function fetchPecipes({
   limit = 10,
   skip = 0,
   search,
+  authorId,
 }: {
   limit?: number;
   skip?: number;
   search?: string;
+  authorId?: string;
 }) {
   try {
-    const { recipes } = await getRecipes({ limit, skip, search });
+    const { recipes } = await getRecipes({ limit, skip, search, authorId });
     return recipes;
   } catch (error) {
     console.error("Error fetching recipes:", error);
