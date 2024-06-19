@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { verifySession } from "./utils/auth";
 
 export default async function middleware(req: NextRequest) {
-  const baseUrl = process.env.BASE_URL || "https://recpies.dimonaco.co.uk";
+  const baseUrl = process.env.BASE_URL || "https://recipes.dimonaco.co.uk";
 
   const publicRoutes = ["/", "/api/auth/signin", "/api/auth/signout"];
 
